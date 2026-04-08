@@ -22,3 +22,7 @@ All notable changes to the Peacock extension will be documented in this file.
 - Fix glob v10 API usage in test suite runner
 - Fix Mocha 10 type compatibility in built-in-colors tests
 - Update istanbul coverage report generation for newer API
+- Replace `*` activation event with `onStartupFinished`
+- Fix command disposable leak — all registerCommand() results now pushed to subscriptions
+- Move StatusBarItem creation from module scope to lazy initialization
+- Add `capabilities.untrustedWorkspaces` manifest declaration

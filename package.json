@@ -28,13 +28,19 @@
   ],
   "preview": false,
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "extensionKind": [
     "ui",
     "workspace"
   ],
   "main": "./dist/extension-node.js",
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Peacock reads workspace color settings but won't modify untrusted workspaces."
+    }
+  },
   "contributes": {
     "commands": [
       {

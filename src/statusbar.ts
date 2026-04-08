@@ -2,21 +2,28 @@ import { StatusBarAlignment, window, StatusBarItem } from 'vscode';
 import { getShowColorInStatusBar, getEnvironmentAwareColor } from './configuration';
 import { Commands } from './models';
 
-const _statusBarItem: StatusBarItem = window.createStatusBarItem(StatusBarAlignment.Left);
+let _statusBarItem: StatusBarItem | undefined;
+
+function ensureStatusBarItem(): StatusBarItem {
+  if (!_statusBarItem) {
+    _statusBarItem = window.createStatusBarItem(StatusBarAlignment.Left);
+  }
+  return _statusBarItem;
+}
 
 export const getStatusBarItem = () => {
   updateStatusBar();
-  return _statusBarItem;
+  return ensureStatusBarItem();
 };
 
 export function clearStatusBar() {
-  const sb = _statusBarItem;
+  const sb = ensureStatusBarItem();
   sb.text = '';
   sb.hide();
 }
 
 export function updateStatusBar() {
-  const sb = _statusBarItem;
+  const sb = ensureStatusBarItem();
   const show = getShowColorInStatusBar();
   const color = getEnvironmentAwareColor();
   sb.text = `$(paintcan) ${color}`;

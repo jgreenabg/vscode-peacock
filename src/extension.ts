@@ -96,18 +96,21 @@ function applyPeacock(): (e: vscode.ConfigurationChangeEvent) => any {
 }
 
 function registerCommands() {
-  commands.registerCommand(Commands.showDocumentation, showDocumentationHandler);
-  commands.registerCommand(Commands.resetWorkspaceColors, resetWorkspaceColorsHandler);
-  commands.registerCommand(Commands.removeAllColors, removeAllPeacockColorsHandler);
-  commands.registerCommand(Commands.saveColorToFavorites, saveColorToFavoritesHandler);
-  commands.registerCommand(Commands.enterColor, enterColorHandler);
-  commands.registerCommand(Commands.changeColorToRandom, changeColorToRandomHandler);
-  commands.registerCommand(Commands.addRecommendedFavorites, addRecommendedFavoritesHandler);
-  commands.registerCommand(Commands.changeColorToPeacockGreen, changeColorToPeacockGreenHandler);
-  commands.registerCommand(Commands.changeColorToFavorite, changeColorToFavoriteHandler);
-  commands.registerCommand(Commands.darken, darkenHandler);
-  commands.registerCommand(Commands.lighten, lightenHandler);
-  commands.registerCommand(Commands.showAndCopyCurrentColor, showAndCopyCurrentColorHandler);
+  const { subscriptions } = State.extensionContext;
+  subscriptions.push(
+    commands.registerCommand(Commands.showDocumentation, showDocumentationHandler),
+    commands.registerCommand(Commands.resetWorkspaceColors, resetWorkspaceColorsHandler),
+    commands.registerCommand(Commands.removeAllColors, removeAllPeacockColorsHandler),
+    commands.registerCommand(Commands.saveColorToFavorites, saveColorToFavoritesHandler),
+    commands.registerCommand(Commands.enterColor, enterColorHandler),
+    commands.registerCommand(Commands.changeColorToRandom, changeColorToRandomHandler),
+    commands.registerCommand(Commands.addRecommendedFavorites, addRecommendedFavoritesHandler),
+    commands.registerCommand(Commands.changeColorToPeacockGreen, changeColorToPeacockGreenHandler),
+    commands.registerCommand(Commands.changeColorToFavorite, changeColorToFavoriteHandler),
+    commands.registerCommand(Commands.darken, darkenHandler),
+    commands.registerCommand(Commands.lighten, lightenHandler),
+    commands.registerCommand(Commands.showAndCopyCurrentColor, showAndCopyCurrentColorHandler),
+  );
 }
 
 export function deactivate() {

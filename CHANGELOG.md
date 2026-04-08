@@ -26,3 +26,6 @@ All notable changes to the Peacock extension will be documented in this file.
 - Fix command disposable leak — all registerCommand() results now pushed to subscriptions
 - Move StatusBarItem creation from module scope to lazy initialization
 - Add `capabilities.untrustedWorkspaces` manifest declaration
+- Add `activityBarTop.*` tokens for top activity bar layout (Cursor default)
+- Expand `commandCenter.*` coverage beyond just `border` — now includes background, foreground, active, and inactive variants
+- Wire new tokens into color assembly logic so Peacock colors apply consistently across modern layouts

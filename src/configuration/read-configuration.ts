@@ -308,11 +308,25 @@ function collectTitleBarSettings(backgroundHex: string, keepForegroundColor: boo
     titleBarSettings[ColorSettings.titleBar_inactiveBackground] =
       titleBarStyle.inactiveBackgroundHex;
 
+    // Command center inherits from title bar
+    titleBarSettings[ColorSettings.commandCenter_background] =
+      titleBarStyle.inactiveBackgroundHex;
+    titleBarSettings[ColorSettings.commandCenter_activeBackground] = titleBarStyle.backgroundHex;
+
     if (!keepForegroundColor) {
       titleBarSettings[ColorSettings.titleBar_activeForeground] = titleBarStyle.foregroundHex;
       titleBarSettings[ColorSettings.titleBar_inactiveForeground] =
         titleBarStyle.inactiveForegroundHex;
       titleBarSettings[ColorSettings.commandCenter_border] = titleBarStyle.inactiveForegroundHex;
+      titleBarSettings[ColorSettings.commandCenter_foreground] = titleBarStyle.foregroundHex;
+      titleBarSettings[ColorSettings.commandCenter_activeForeground] =
+        titleBarStyle.foregroundHex;
+      titleBarSettings[ColorSettings.commandCenter_inactiveForeground] =
+        titleBarStyle.inactiveForegroundHex;
+      titleBarSettings[ColorSettings.commandCenter_inactiveBorder] =
+        titleBarStyle.inactiveForegroundHex;
+      titleBarSettings[ColorSettings.commandCenter_activeBorder] =
+        titleBarStyle.inactiveForegroundHex;
     }
   }
   return titleBarSettings;
@@ -331,9 +345,19 @@ function collectActivityBarSettings(
     activityBarSettings[ColorSettings.activityBar_activeBackground] =
       activityBarStyle.backgroundHex;
 
+    // Top activity bar layout (Cursor default) inherits from activity bar
+    activityBarSettings[ColorSettings.activityBarTop_background] = activityBarStyle.backgroundHex;
+    activityBarSettings[ColorSettings.activityBarTop_activeBackground] =
+      activityBarStyle.backgroundHex;
+
     if (!keepForegroundColor) {
       activityBarSettings[ColorSettings.activityBar_foreground] = activityBarStyle.foregroundHex;
       activityBarSettings[ColorSettings.activityBar_inactiveForeground] =
+        activityBarStyle.inactiveForegroundHex;
+
+      activityBarSettings[ColorSettings.activityBarTop_activeForeground] =
+        activityBarStyle.foregroundHex;
+      activityBarSettings[ColorSettings.activityBarTop_inactiveForeground] =
         activityBarStyle.inactiveForegroundHex;
     }
 

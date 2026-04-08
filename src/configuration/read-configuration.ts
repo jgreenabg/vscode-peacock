@@ -29,7 +29,6 @@ import {
   getInactiveBackgroundColorHex,
   getInactiveForegroundColorHex,
 } from '../color-library';
-import { LiveShareSettings } from '../live-share';
 import { sortSettingsIndexer } from '../object-library';
 
 const { workspace } = vscode;
@@ -174,10 +173,6 @@ export function getPeacockColor() {
 export function getPeacockRemoteColor() {
   const remoteColor = readConfiguration<string>(StandardSettings.RemoteColor);
   return remoteColor;
-}
-
-export function getLiveShareColor(liveShareSetting: LiveShareSettings) {
-  return readConfiguration<string>(liveShareSetting, '');
 }
 
 export function getDarkForegroundColorOrOverride() {

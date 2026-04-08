@@ -114,16 +114,11 @@ suite('can set color to built-in color', () => {
   });
 });
 
-function testChangingColorToPeacockGreen():
-  | ((this: Mocha.ITestCallbackContext, done: MochaDone) => any)
-  | undefined {
+function testChangingColorToPeacockGreen(): (() => Promise<void>) | undefined {
   return testBuiltInColor(Commands.changeColorToPeacockGreen, peacockGreen);
 }
 
-function testBuiltInColor(
-  cmd: Commands,
-  builtInColor: string,
-): ((this: Mocha.ITestCallbackContext, done: MochaDone) => any) | undefined {
+function testBuiltInColor(cmd: Commands, builtInColor: string): (() => Promise<void>) | undefined {
   return async () => {
     await vscode.commands.executeCommand(cmd);
     const config = getColorCustomizationConfig();

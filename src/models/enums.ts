@@ -1,5 +1,3 @@
-import { LiveShareSettings } from '../live-share';
-
 export enum StandardSettings {
   Color = 'color',
   DarkenLightenPercentage = 'darkenLightenPercentage',
@@ -29,7 +27,7 @@ export enum AffectedSettings {
   TitleBar = 'affectTitleBar',
 }
 
-export type AllSettings = StandardSettings | AffectedSettings | LiveShareSettings;
+export type AllSettings = StandardSettings | AffectedSettings;
 
 export enum Commands {
   addRecommendedFavorites = 'peacock.addRecommendedFavorites',

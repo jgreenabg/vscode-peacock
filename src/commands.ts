@@ -20,7 +20,6 @@ import {
 } from './configuration';
 import { promptForColor, promptForFavoriteColor, promptForFavoriteColorName } from './inputs';
 
-import { resetLiveSharePreviousColors } from './live-share';
 import { notify } from './notification';
 import * as vscode from 'vscode';
 
@@ -37,7 +36,6 @@ export async function showDocumentationHandler() {
 }
 
 export async function resetWorkspaceColorsHandler() {
-  await resetLiveSharePreviousColors();
   await updatePeacockColor(undefined);
   await updatePeacockRemoteColor(undefined);
   return State.extensionContext;

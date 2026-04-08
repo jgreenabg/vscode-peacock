@@ -34,7 +34,6 @@ import {
 } from './configuration';
 import { applyColor, updateColorSetting } from './apply-color';
 import { Logger } from './logging';
-import { addLiveShareIntegration } from './live-share';
 import { addRemoteIntegration } from './remote';
 import { saveFavoritesVersionGlobalMemento, getMementos } from './mementos';
 
@@ -56,7 +55,6 @@ export async function activate(context: vscode.ExtensionContext) {
      * This entire function will re-run when a workspace is opened.
      */
     await checkSurpriseMeOnStartupLogic();
-    await addLiveShareIntegration(State.extensionContext);
     await addRemoteIntegration(State.extensionContext);
   } else {
     Logger.info('Peacock is not in a workspace, so Peacock functionality is not available.');

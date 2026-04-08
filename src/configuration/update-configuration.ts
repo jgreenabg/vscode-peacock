@@ -14,7 +14,6 @@ import {
 } from '../models';
 import { Logger } from '../logging';
 import { getFavoriteColors, getColorCustomizationConfigFromWorkspace } from './read-configuration';
-import { LiveShareSettings } from '../live-share';
 
 export async function updateGlobalConfiguration(setting: AllSettings, value?: any) {
   const config = vscode.workspace.getConfiguration();
@@ -135,13 +134,6 @@ export async function updatePeacockRemoteColor(color: string | undefined) {
   const config = vscode.workspace.getConfiguration();
   const section = `${extensionShortName}.${StandardSettings.RemoteColor}`;
   return await config.update(section, color, ConfigurationTarget.Workspace);
-}
-
-export async function updateLiveShareColor(
-  liveShareSetting: LiveShareSettings,
-  color: string | undefined,
-) {
-  return await updateGlobalConfiguration(liveShareSetting, color);
 }
 
 export async function updateAffectedElements(values: IPeacockAffectedElementSettings) {

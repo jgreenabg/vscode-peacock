@@ -6,29 +6,41 @@ All notable changes to the Peacock extension will be documented in this file.
 
 ## [Unreleased]
 
-### Modernization
+### Breaking Changes
 
-- Scaffold `TODO.md` and `CHANGELOG.md` for phased modernization tracking
 - Raise `engines.vscode` to `^1.105.0` (Cursor 3.x desktop only)
+- Replace `*` activation event with `onStartupFinished`
+
+### Removed
+
+- Remove Live Share integration entirely (`vsls` dependency, commands, settings, code)
 - Remove web extension target (`browser` field, web webpack config)
+- Remove `process`, `@types/webpack-env`, `@vscode/test-web` devDependencies
+
+### Changed
+
 - Upgrade TypeScript 3.9 to 5.7, `@types/node` to ^22, Mocha to ^10, Sinon to ^19, Prettier to ^3
 - Migrate ESLint 6 + `.eslintrc` to ESLint 9 flat config with typescript-eslint v8
 - Upgrade Husky v4 to v9 with `.husky/` directory
 - Replace `vsce` with `@vscode/vsce` in scripts
+- Replace deprecated `vscode-test` with `@vscode/test-electron`
 - Update tsconfig target to ES2022
 - Move `@types/tinycolor2` from dependencies to devDependencies
-- Remove Live Share integration entirely (`vsls` dependency, commands, settings, code)
-- Remove `process`, `@types/webpack-env`, `@vscode/test-web` devDependencies
 - Fix glob v10 API usage in test suite runner
 - Fix Mocha 10 type compatibility in built-in-colors tests
 - Update istanbul coverage report generation for newer API
-- Replace `*` activation event with `onStartupFinished`
-- Fix command disposable leak — all registerCommand() results now pushed to subscriptions
-- Move StatusBarItem creation from module scope to lazy initialization
+
+### Added
+
+- Scaffold `TODO.md` and `CHANGELOG.md` for phased modernization tracking
 - Add `capabilities.untrustedWorkspaces` manifest declaration
 - Add `activityBarTop.*` tokens for top activity bar layout (Cursor default)
-- Expand `commandCenter.*` coverage beyond just `border` — now includes background, foreground, active, and inactive variants
-- Wire new tokens into color assembly logic so Peacock colors apply consistently across modern layouts
-- Replace deprecated `vscode-test` with `@vscode/test-electron`
+- Expand `commandCenter.*` coverage (background, foreground, active, inactive variants)
+- Wire new tokens into color assembly logic for modern layouts
+- Add GitHub Actions CI workflow (lint, compile, test on push/PR)
 - Unskip status bar test suite
-- Add GitHub Actions CI workflow for extension tests (lint, compile, test on push/PR)
+
+### Fixed
+
+- Fix command disposable leak — all `registerCommand()` results now pushed to subscriptions
+- Move StatusBarItem creation from module scope to lazy initialization

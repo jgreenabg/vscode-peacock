@@ -309,8 +309,7 @@ function collectTitleBarSettings(backgroundHex: string, keepForegroundColor: boo
       titleBarStyle.inactiveBackgroundHex;
 
     // Command center inherits from title bar
-    titleBarSettings[ColorSettings.commandCenter_background] =
-      titleBarStyle.inactiveBackgroundHex;
+    titleBarSettings[ColorSettings.commandCenter_background] = titleBarStyle.inactiveBackgroundHex;
     titleBarSettings[ColorSettings.commandCenter_activeBackground] = titleBarStyle.backgroundHex;
 
     if (!keepForegroundColor) {
@@ -319,8 +318,7 @@ function collectTitleBarSettings(backgroundHex: string, keepForegroundColor: boo
         titleBarStyle.inactiveForegroundHex;
       titleBarSettings[ColorSettings.commandCenter_border] = titleBarStyle.inactiveForegroundHex;
       titleBarSettings[ColorSettings.commandCenter_foreground] = titleBarStyle.foregroundHex;
-      titleBarSettings[ColorSettings.commandCenter_activeForeground] =
-        titleBarStyle.foregroundHex;
+      titleBarSettings[ColorSettings.commandCenter_activeForeground] = titleBarStyle.foregroundHex;
       titleBarSettings[ColorSettings.commandCenter_inactiveForeground] =
         titleBarStyle.inactiveForegroundHex;
       titleBarSettings[ColorSettings.commandCenter_inactiveBorder] =

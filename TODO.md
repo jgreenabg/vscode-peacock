@@ -5,4 +5,4 @@
 - [x] **Phase 2** — Runtime hygiene
 - [x] **Phase 3** — Remove Live Share (merged into Phase 1)
 - [x] **Phase 4** — Refresh theme tokens
-- [ ] **Phase 5** — Rebuild tests and CI
+- [x] **Phase 5** — Rebuild tests and CI

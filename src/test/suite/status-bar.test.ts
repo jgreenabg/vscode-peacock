@@ -4,7 +4,7 @@ import { IPeacockSettings, Commands, getExtension, peacockGreen } from '../../mo
 import { setupTestSuite, teardownTestSuite, setupTest } from './lib/setup-teardown-test-suite';
 import { getStatusBarItem } from '../../statusbar';
 
-suite.skip('StatusBar Tests', () => {
+suite('StatusBar Tests', () => {
   const originalValues = {} as IPeacockSettings;
   let extension: vscode.Extension<any>;
 

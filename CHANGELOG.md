@@ -29,3 +29,6 @@ All notable changes to the Peacock extension will be documented in this file.
 - Add `activityBarTop.*` tokens for top activity bar layout (Cursor default)
 - Expand `commandCenter.*` coverage beyond just `border` — now includes background, foreground, active, and inactive variants
 - Wire new tokens into color assembly logic so Peacock colors apply consistently across modern layouts
+- Replace deprecated `vscode-test` with `@vscode/test-electron`
+- Unskip status bar test suite
+- Add GitHub Actions CI workflow for extension tests (lint, compile, test on push/PR)

@@ -44,3 +44,4 @@ All notable changes to the Peacock extension will be documented in this file.
 
 - Fix command disposable leak — all `registerCommand()` results now pushed to subscriptions
 - Move StatusBarItem creation from module scope to lazy initialization
+- Keep Cursor editor toolbar icons visible when Peacock and the active theme use opposite light or dark color families

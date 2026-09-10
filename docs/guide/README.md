@@ -324,6 +324,8 @@ A successful and recommended settings configuration to colorize the Title Bar is
 
 ![Title Bar Settings](../assets/title-bar-coloring-settings.png)
 
+Cursor uses the title bar foreground color for some editor toolbar icons, including the New Agent actions. When a Peacock title bar and the active Cursor theme belong to opposite light or dark color families, Peacock adjusts only the title bar shade to match the theme while preserving the selected hue. This keeps the shared foreground readable; activity bar and status bar colors remain unchanged. VS Code retains the standard Peacock title bar behavior.
+
 ### How are foreground colors calculated
 
 Peacock is using tinycolor which provides some basic color theory mechanisms to determine whether or not to show a light or dark foreground color based on the perceived brightness of the background. More or less, if it thinks the background is darker than 50% then Peacock uses the light foreground. If it thinks the background is greater than 50% then Peacock uses the dark foreground.

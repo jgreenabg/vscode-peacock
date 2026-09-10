@@ -43,6 +43,36 @@ export function getForegroundColorHex(backgroundColor = '') {
   return formatHex(tinycolor(foreground));
 }
 
+export function getThemeCompatibleBackgroundColorHex(
+  backgroundColor: string,
+  foregroundColor: string,
+  useLightBackground: boolean,
+  ratio = ReadabilityRatios.Text,
+) {
+  const background = tinycolor(backgroundColor);
+  if (background.isLight() === useLightBackground) {
+    return formatHex(background);
+  }
+
+  const { h, s, l, a } = background.toHsl();
+  const direction = useLightBackground ? 1 : -1;
+  const stepCount = 100;
+
+  for (let step = 1; step <= stepCount; step += 1) {
+    const adjustedLightness = Math.min(1, Math.max(0, l + direction * (step / stepCount)));
+    const adjustedBackground = tinycolor({ h, s, l: adjustedLightness, a });
+    const matchesThemeFamily = adjustedBackground.isLight() === useLightBackground;
+    const isReadable =
+      tinycolor.readability(adjustedBackground, tinycolor(foregroundColor)) >= ratio;
+
+    if (matchesThemeFamily && isReadable) {
+      return formatHex(adjustedBackground);
+    }
+  }
+
+  return formatHex(tinycolor({ h, s, l: useLightBackground ? 1 : 0, a }));
+}
+
 export function getInactiveForegroundColorHex(backgroundColor = '') {
   const foreground = tinycolor(getForegroundColorHex(backgroundColor));
   foreground.setAlpha(inactiveElementAlpha);

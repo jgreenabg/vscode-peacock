@@ -66,33 +66,34 @@ export async function activate(context: vscode.ExtensionContext) {
 function addSubscriptions() {
   State.extensionContext.subscriptions.push(Logger.getChannel());
 
-  State.extensionContext.subscriptions.push(workspace.onDidChangeConfiguration(applyPeacock()));
+  State.extensionContext.subscriptions.push(workspace.onDidChangeConfiguration(applyPeacock));
 }
 
-function applyPeacock(): (e: vscode.ConfigurationChangeEvent) => any {
-  return async e => {
-    const color = getEnvironmentAwareColor();
-    const appliedColor = getCurrentColorBeforeAdjustments();
-    if (checkIfPeacockSettingsChanged(e) && (color || appliedColor)) {
-      /**
-       * If the settings have changed
-       * AND (either we have a peacock.color/remoteColor to apply
-       *       OR we have an applied color already in the color customizations),
-       * Then we apply the "color"
-       */
-      Logger.info(
-        `${extensionShortName}: Configuration changed. Changing the color to most recently selected color: ${color}`,
-      );
-      await applyColor(color);
+export async function applyPeacock(e: vscode.ConfigurationChangeEvent) {
+  const color = getEnvironmentAwareColor();
+  const appliedColor = getCurrentColorBeforeAdjustments();
+  const shouldReapply =
+    checkIfPeacockSettingsChanged(e) || e.affectsConfiguration('workbench.colorTheme');
 
-      // Only update the color in the workspace settings
-      // if there was already a workspace setting
-      const colorSource = inspectColor();
-      if (colorSource.colorSource === ColorSource.WorkspaceValue) {
-        await updateColorSetting(color);
-      }
+  if (shouldReapply && (color || appliedColor)) {
+    /**
+     * If relevant settings have changed
+     * AND (either we have a peacock.color/remoteColor to apply
+     *       OR we have an applied color already in the color customizations),
+     * Then we apply the "color"
+     */
+    Logger.info(
+      `${extensionShortName}: Configuration changed. Changing the color to most recently selected color: ${color}`,
+    );
+    await applyColor(color);
+
+    // Only update the color in the workspace settings
+    // if there was already a workspace setting
+    const colorSource = inspectColor();
+    if (colorSource.colorSource === ColorSource.WorkspaceValue) {
+      await updateColorSetting(color);
     }
-  };
+  }
 }
 
 function registerCommands() {

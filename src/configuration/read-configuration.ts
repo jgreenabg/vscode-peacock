@@ -28,6 +28,7 @@ import {
   getForegroundColorHex,
   getInactiveBackgroundColorHex,
   getInactiveForegroundColorHex,
+  getThemeCompatibleBackgroundColorHex,
 } from '../color-library';
 import { sortSettingsIndexer } from '../object-library';
 
@@ -299,7 +300,28 @@ export function checkIfPeacockSettingsChanged(e: vscode.ConfigurationChangeEvent
 function collectTitleBarSettings(backgroundHex: string, keepForegroundColor: boolean) {
   const titleBarSettings = {} as ISettingsIndexer;
   if (isAffectedSettingSelected(AffectedSettings.TitleBar)) {
-    const titleBarStyle = getElementStyle(backgroundHex, ElementNames.titleBar);
+    let titleBarStyle = getElementStyle(backgroundHex, ElementNames.titleBar);
+    const isCursor = vscode.env.appName.includes('Cursor');
+
+    if (isCursor) {
+      const themeKind = vscode.window.activeColorTheme.kind;
+      const useLightBackground =
+        themeKind === vscode.ColorThemeKind.Light ||
+        themeKind === vscode.ColorThemeKind.HighContrastLight;
+      const themeForeground = useLightBackground
+        ? getDarkForegroundColorOrOverride()
+        : getLightForegroundColorOrOverride();
+      const compatibleBackground = getThemeCompatibleBackgroundColorHex(
+        titleBarStyle.backgroundHex,
+        themeForeground,
+        useLightBackground,
+      );
+
+      if (compatibleBackground !== titleBarStyle.backgroundHex) {
+        titleBarStyle = getElementStyle(compatibleBackground);
+      }
+    }
+
     titleBarSettings[ColorSettings.titleBar_activeBackground] = titleBarStyle.backgroundHex;
     if (isAffectedSettingSelected(AffectedSettings.StatusAndTitleBorders)) {
       titleBarSettings[ColorSettings.titleBar_border] = titleBarStyle.backgroundHex;

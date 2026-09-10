@@ -14,6 +14,7 @@ import {
   writeRecommendedFavoriteColors,
   updatePeacockColor,
   getEnvironmentAwareColor,
+  getEffectiveThemeFamily,
   updatePeacockRemoteColor,
   updatePeacockRemoteColorInUserSettings,
   updatePeacockColorInUserSettings,
@@ -80,7 +81,7 @@ export async function changeColorToRandomHandler() {
     }
     color = o.value;
   } else {
-    color = getRandomColorHex();
+    color = getRandomColorHex(getEffectiveThemeFamily());
   }
 
   await applyColor(color);

@@ -175,22 +175,37 @@
         "peacock.affectEditorGroupBorder": {
           "type": "boolean",
           "default": false,
-          "description": "Specifies whether Peacock should affect the editorGroup border."
+          "description": "VS Code only. Specifies whether Peacock should affect the editor group border. Cursor keeps central editor borders theme-controlled."
+        },
+        "peacock.affectFrameIndicators": {
+          "type": "boolean",
+          "default": false,
+          "description": "Cursor focused. Adds stronger active, focus, and drop borders to Peacock-colored activity bar, status bar, and bottom panel surfaces."
         },
         "peacock.affectPanelBorder": {
           "type": "boolean",
           "default": false,
           "description": "Specifies whether Peacock should affect the panel border."
         },
+        "peacock.affectPanelBackground": {
+          "type": "boolean",
+          "default": false,
+          "description": "Cursor only. Specifies whether Peacock should apply solid derived variants to the bottom panel background, section headers, and sticky rows without changing the editor."
+        },
         "peacock.affectSideBarBorder": {
           "type": "boolean",
           "default": false,
           "description": "Specifies whether Peacock should affect the sideBar border."
         },
+        "peacock.affectSideBarBackground": {
+          "type": "boolean",
+          "default": false,
+          "description": "Cursor only. Specifies whether Peacock should apply solid derived variants to side bar, auxiliary bar, title, section header, and sticky row backgrounds."
+        },
         "peacock.affectSashHover": {
           "type": "boolean",
-          "default": true,
-          "description": "Specifies whether Peacock should affect the sash border."
+          "default": false,
+          "description": "Specifies whether Peacock should affect draggable sash hover borders, including editor splits."
         },
         "peacock.affectActivityBar": {
           "type": "boolean",
@@ -226,6 +241,16 @@
           "type": "string",
           "default": "",
           "description": "The Peacock color that will be applied to workspaces. This should only be set at the workspace level."
+        },
+        "peacock.cursorThemeFamily": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "light",
+            "dark"
+          ],
+          "default": "auto",
+          "description": "Cursor only. Overrides the active theme's reported light or dark family when a theme reports it incorrectly. Auto uses Cursor's reported theme kind."
         },
         "peacock.elementAdjustments": {
           "type": "object",

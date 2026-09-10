@@ -19,6 +19,10 @@ import {
   ForegroundColors,
   defaultAmountToDarkenLighten,
   ColorSource,
+  BorderContrastTarget,
+  CursorThemeFamily,
+  SurfaceKind,
+  ThemeFamily,
 } from '../models';
 import {
   getAdjustedColorHex,
@@ -30,6 +34,7 @@ import {
   getInactiveForegroundColorHex,
   getThemeCompatibleBackgroundColorHex,
 } from '../color-library';
+import { getBorderColorHex, getSurfaceColorHex, resolveThemeFamily } from '../palette-library';
 import { sortSettingsIndexer } from '../object-library';
 
 const { workspace } = vscode;
@@ -73,6 +78,22 @@ export function getPeacockWorkspace() {
 
 export function getUserConfig() {
   return workspace.getConfiguration(Sections.peacockSection);
+}
+
+export function isCursorHost() {
+  return vscode.env.appName.includes('Cursor');
+}
+
+export function getCursorThemeFamily() {
+  return readConfiguration<CursorThemeFamily>(
+    StandardSettings.CursorThemeFamily,
+    CursorThemeFamily.Auto,
+  );
+}
+
+export function getEffectiveThemeFamily() {
+  const override = isCursorHost() ? getCursorThemeFamily() : CursorThemeFamily.Auto;
+  return resolveThemeFamily(override, vscode.window.activeColorTheme.kind);
 }
 
 export function getCurrentColorBeforeAdjustments() {
@@ -122,11 +143,17 @@ export function prepareColors(backgroundHex: string) {
 
   const statusBarSettings = collectStatusBarSettings(backgroundHex, keepForegroundColor);
 
+  const surfaceSettings = collectSurfaceSettings(backgroundHex, keepForegroundColor);
+
+  const frameIndicatorSettings = collectFrameIndicatorSettings(backgroundHex);
+
   // Merge all color settings
   const mergedSettings: ISettingsIndexer = {
     ...activityBarSettings,
     ...titleBarSettings,
     ...statusBarSettings,
+    ...surfaceSettings,
+    ...frameIndicatorSettings,
     ...accentBorderSettings,
     ...squigglyBeGoneSettings,
   };
@@ -235,7 +262,10 @@ export function getAffectedElements() {
     debuggingStatusBar: readConfiguration<boolean>(AffectedSettings.DebuggingStatusBar) || false,
     titleBar: readConfiguration<boolean>(AffectedSettings.TitleBar) || false,
     editorGroupBorder: readConfiguration<boolean>(AffectedSettings.EditorGroupBorder) || false,
+    frameIndicators: readConfiguration<boolean>(AffectedSettings.FrameIndicators) || false,
+    panelBackground: readConfiguration<boolean>(AffectedSettings.PanelBackground) || false,
     panelBorder: readConfiguration<boolean>(AffectedSettings.PanelBorder) || false,
+    sideBarBackground: readConfiguration<boolean>(AffectedSettings.SideBarBackground) || false,
     sideBarBorder: readConfiguration<boolean>(AffectedSettings.SideBarBorder) || false,
     sashHover: readConfiguration<boolean>(AffectedSettings.SashHover) || false,
     statusAndTitleBorders:
@@ -301,13 +331,10 @@ function collectTitleBarSettings(backgroundHex: string, keepForegroundColor: boo
   const titleBarSettings = {} as ISettingsIndexer;
   if (isAffectedSettingSelected(AffectedSettings.TitleBar)) {
     let titleBarStyle = getElementStyle(backgroundHex, ElementNames.titleBar);
-    const isCursor = vscode.env.appName.includes('Cursor');
+    const isCursor = isCursorHost();
 
     if (isCursor) {
-      const themeKind = vscode.window.activeColorTheme.kind;
-      const useLightBackground =
-        themeKind === vscode.ColorThemeKind.Light ||
-        themeKind === vscode.ColorThemeKind.HighContrastLight;
+      const useLightBackground = getEffectiveThemeFamily() === ThemeFamily.Light;
       const themeForeground = useLightBackground
         ? getDarkForegroundColorOrOverride()
         : getLightForegroundColorOrOverride();
@@ -324,7 +351,19 @@ function collectTitleBarSettings(backgroundHex: string, keepForegroundColor: boo
 
     titleBarSettings[ColorSettings.titleBar_activeBackground] = titleBarStyle.backgroundHex;
     if (isAffectedSettingSelected(AffectedSettings.StatusAndTitleBorders)) {
-      titleBarSettings[ColorSettings.titleBar_border] = titleBarStyle.backgroundHex;
+      titleBarSettings[ColorSettings.titleBar_border] = isCursor
+        ? getBorderColorHex(titleBarStyle.backgroundHex, BorderContrastTarget.Medium)
+        : titleBarStyle.backgroundHex;
+      if (isCursor) {
+        titleBarSettings[ColorSettings.window_activeBorder] = getBorderColorHex(
+          titleBarStyle.backgroundHex,
+          BorderContrastTarget.Strong,
+        );
+        titleBarSettings[ColorSettings.window_inactiveBorder] = getBorderColorHex(
+          titleBarStyle.backgroundHex,
+          BorderContrastTarget.Subtle,
+        );
+      }
     }
 
     titleBarSettings[ColorSettings.titleBar_inactiveBackground] =
@@ -343,8 +382,10 @@ function collectTitleBarSettings(backgroundHex: string, keepForegroundColor: boo
       titleBarSettings[ColorSettings.commandCenter_activeForeground] = titleBarStyle.foregroundHex;
       titleBarSettings[ColorSettings.commandCenter_inactiveForeground] =
         titleBarStyle.inactiveForegroundHex;
-      titleBarSettings[ColorSettings.commandCenter_inactiveBorder] =
-        titleBarStyle.inactiveForegroundHex;
+      if (!isCursor) {
+        titleBarSettings[ColorSettings.commandCenter_inactiveBorder] =
+          titleBarStyle.inactiveForegroundHex;
+      }
       titleBarSettings[ColorSettings.commandCenter_activeBorder] =
         titleBarStyle.inactiveForegroundHex;
     }
@@ -375,8 +416,7 @@ function collectActivityBarSettings(
       activityBarSettings[ColorSettings.activityBar_inactiveForeground] =
         activityBarStyle.inactiveForegroundHex;
 
-      activityBarSettings[ColorSettings.activityBarTop_activeForeground] =
-        activityBarStyle.foregroundHex;
+      activityBarSettings[ColorSettings.activityBarTop_foreground] = activityBarStyle.foregroundHex;
       activityBarSettings[ColorSettings.activityBarTop_inactiveForeground] =
         activityBarStyle.inactiveForegroundHex;
     }
@@ -395,13 +435,20 @@ function collectStatusBarSettings(backgroundHex: string, keepForegroundColor: bo
   const statusBarSettings = {} as ISettingsIndexer;
   if (isAffectedSettingSelected(AffectedSettings.StatusBar)) {
     const statusBarStyle = getElementStyle(backgroundHex, ElementNames.statusBar);
+    const isCursor = isCursorHost();
     statusBarSettings[ColorSettings.statusBar_background] = statusBarStyle.backgroundHex;
     statusBarSettings[ColorSettings.statusBarItem_hoverBackground] =
       statusBarStyle.backgroundHoverHex;
     statusBarSettings[ColorSettings.statusBarItem_remoteBackground] = statusBarStyle.backgroundHex;
 
     if (isAffectedSettingSelected(AffectedSettings.StatusAndTitleBorders)) {
-      statusBarSettings[ColorSettings.statusBar_border] = statusBarStyle.backgroundHex;
+      const border = isCursor
+        ? getBorderColorHex(statusBarStyle.backgroundHex, BorderContrastTarget.Medium)
+        : statusBarStyle.backgroundHex;
+      statusBarSettings[ColorSettings.statusBar_border] = border;
+      if (isCursor) {
+        statusBarSettings[ColorSettings.statusBar_noFolderBorder] = border;
+      }
     }
 
     if (!keepForegroundColor) {
@@ -417,7 +464,9 @@ function collectStatusBarSettings(backgroundHex: string, keepForegroundColor: bo
       statusBarSettings[ColorSettings.statusBar_debuggingBackground] = debuggingBackgroundColorHex;
 
       if (isAffectedSettingSelected(AffectedSettings.StatusAndTitleBorders)) {
-        statusBarSettings[ColorSettings.statusBar_debuggingBorder] = debuggingBackgroundColorHex;
+        statusBarSettings[ColorSettings.statusBar_debuggingBorder] = isCursor
+          ? getBorderColorHex(debuggingBackgroundColorHex, BorderContrastTarget.Medium)
+          : debuggingBackgroundColorHex;
       }
 
       if (!keepForegroundColor) {
@@ -430,20 +479,144 @@ function collectStatusBarSettings(backgroundHex: string, keepForegroundColor: bo
   return statusBarSettings;
 }
 
+function collectSurfaceSettings(backgroundHex: string, keepForegroundColor: boolean) {
+  const surfaceSettings = {} as ISettingsIndexer;
+  if (!isCursorHost()) {
+    return surfaceSettings;
+  }
+
+  const themeFamily = getEffectiveThemeFamily();
+  const sideBarBackground = getSurfaceColorHex(backgroundHex, SurfaceKind.SideBar, themeFamily);
+  const sideBarChrome = getSurfaceColorHex(backgroundHex, SurfaceKind.SideBarChrome, themeFamily);
+  const panelBackground = getSurfaceColorHex(backgroundHex, SurfaceKind.Panel, themeFamily);
+  const panelChrome = getSurfaceColorHex(backgroundHex, SurfaceKind.PanelChrome, themeFamily);
+
+  if (isAffectedSettingSelected(AffectedSettings.SideBarBackground)) {
+    surfaceSettings[ColorSettings.sideBar_background] = sideBarBackground;
+    surfaceSettings[ColorSettings.sideBarTitle_background] = sideBarChrome;
+    surfaceSettings[ColorSettings.sideBarSectionHeader_background] = sideBarChrome;
+    surfaceSettings[ColorSettings.sideBarStickyScroll_background] = sideBarChrome;
+    if (!keepForegroundColor) {
+      surfaceSettings[ColorSettings.sideBar_foreground] = getForegroundColorHex(sideBarBackground);
+      const chromeForeground = getForegroundColorHex(sideBarChrome);
+      surfaceSettings[ColorSettings.sideBarTitle_foreground] = chromeForeground;
+      surfaceSettings[ColorSettings.sideBarSectionHeader_foreground] = chromeForeground;
+    }
+  }
+
+  if (isAffectedSettingSelected(AffectedSettings.SideBarBorder)) {
+    const border = getBorderColorHex(sideBarChrome, BorderContrastTarget.Subtle);
+    surfaceSettings[ColorSettings.sideBarTitle_border] = border;
+    surfaceSettings[ColorSettings.sideBarSectionHeader_border] = border;
+    surfaceSettings[ColorSettings.sideBarStickyScroll_border] = border;
+  }
+
+  if (isAffectedSettingSelected(AffectedSettings.PanelBackground)) {
+    surfaceSettings[ColorSettings.panel_background] = panelBackground;
+    surfaceSettings[ColorSettings.panelSectionHeader_background] = panelChrome;
+    surfaceSettings[ColorSettings.panelStickyScroll_background] = panelChrome;
+    if (!keepForegroundColor) {
+      const foreground = getForegroundColorHex(panelBackground);
+      surfaceSettings[ColorSettings.panelTitle_activeForeground] = foreground;
+      surfaceSettings[ColorSettings.panelTitle_inactiveForeground] = foreground;
+      surfaceSettings[ColorSettings.panelSectionHeader_foreground] =
+        getForegroundColorHex(panelChrome);
+    }
+  }
+
+  if (isAffectedSettingSelected(AffectedSettings.PanelBorder)) {
+    const border = getBorderColorHex(panelChrome, BorderContrastTarget.Subtle);
+    surfaceSettings[ColorSettings.panelSectionHeader_border] = border;
+    surfaceSettings[ColorSettings.panelStickyScroll_border] = border;
+  }
+
+  return surfaceSettings;
+}
+
+function collectFrameIndicatorSettings(backgroundHex: string) {
+  const frameSettings = {} as ISettingsIndexer;
+  if (!isCursorHost() || !isAffectedSettingSelected(AffectedSettings.FrameIndicators)) {
+    return frameSettings;
+  }
+
+  if (isAffectedSettingSelected(AffectedSettings.ActivityBar)) {
+    const activityBarBackground = getElementStyle(
+      backgroundHex,
+      ElementNames.activityBar,
+    ).backgroundHex;
+    const border = getBorderColorHex(activityBarBackground, BorderContrastTarget.Strong);
+    frameSettings[ColorSettings.activityBar_activeBorder] = border;
+    frameSettings[ColorSettings.activityBar_activeFocusBorder] = border;
+    frameSettings[ColorSettings.activityBarTop_activeBorder] = border;
+    frameSettings[ColorSettings.activityBarTop_dropBorder] = border;
+    frameSettings[ColorSettings.activityBar_dropBorder] = border;
+  }
+
+  if (isAffectedSettingSelected(AffectedSettings.StatusBar)) {
+    const statusBarBackground = getElementStyle(
+      backgroundHex,
+      ElementNames.statusBar,
+    ).backgroundHex;
+    const border = getBorderColorHex(statusBarBackground, BorderContrastTarget.Strong);
+    frameSettings[ColorSettings.statusBar_focusBorder] = border;
+    frameSettings[ColorSettings.statusBarItem_focusBorder] = border;
+  }
+
+  if (isAffectedSettingSelected(AffectedSettings.PanelBackground)) {
+    const themeFamily = getEffectiveThemeFamily();
+    const panelBackground = getSurfaceColorHex(backgroundHex, SurfaceKind.Panel, themeFamily);
+    const panelChrome = getSurfaceColorHex(backgroundHex, SurfaceKind.PanelChrome, themeFamily);
+    frameSettings[ColorSettings.panelTitle_activeBorder] = getBorderColorHex(
+      panelChrome,
+      BorderContrastTarget.Strong,
+    );
+    frameSettings[ColorSettings.panel_dropBorder] = getBorderColorHex(
+      panelBackground,
+      BorderContrastTarget.Strong,
+    );
+  }
+
+  return frameSettings;
+}
+
 function collectAccentBorderSettings(backgroundHex: string) {
   const accentBorderSettings = {} as ISettingsIndexer;
 
   // use same adjustments and activity bar
   const { backgroundHex: color } = getElementStyle(backgroundHex, ElementNames.activityBar);
+  const isCursor = isCursorHost();
+  const themeFamily = getEffectiveThemeFamily();
+  const sideBarBackground = getSurfaceColorHex(backgroundHex, SurfaceKind.SideBar, themeFamily);
+  const panelBackground = getSurfaceColorHex(backgroundHex, SurfaceKind.Panel, themeFamily);
+  const panelChrome = getSurfaceColorHex(backgroundHex, SurfaceKind.PanelChrome, themeFamily);
 
-  if (isAffectedSettingSelected(AffectedSettings.EditorGroupBorder)) {
+  if (isAffectedSettingSelected(AffectedSettings.EditorGroupBorder) && !isCursor) {
     accentBorderSettings[ColorSettings.editorGroupBorder] = color;
   }
   if (isAffectedSettingSelected(AffectedSettings.PanelBorder)) {
-    accentBorderSettings[ColorSettings.panelBorder] = color;
+    accentBorderSettings[ColorSettings.panelBorder] = isCursor
+      ? getBorderColorHex(panelBackground, BorderContrastTarget.Subtle)
+      : color;
+    if (isCursor) {
+      const internalBorder = getBorderColorHex(panelChrome, BorderContrastTarget.Subtle);
+      accentBorderSettings[ColorSettings.panelTitle_border] = internalBorder;
+      accentBorderSettings[ColorSettings.panelSection_border] = internalBorder;
+    }
   }
   if (isAffectedSettingSelected(AffectedSettings.SideBarBorder)) {
-    accentBorderSettings[ColorSettings.sideBarBorder] = color;
+    accentBorderSettings[ColorSettings.sideBarBorder] = isCursor
+      ? getBorderColorHex(sideBarBackground, BorderContrastTarget.Medium)
+      : color;
+    if (isCursor) {
+      accentBorderSettings[ColorSettings.activityBar_border] = getBorderColorHex(
+        color,
+        BorderContrastTarget.Medium,
+      );
+      accentBorderSettings[ColorSettings.sideBarActivityBarTop_border] = getBorderColorHex(
+        sideBarBackground,
+        BorderContrastTarget.Medium,
+      );
+    }
   }
   if (isAffectedSettingSelected(AffectedSettings.SashHover)) {
     accentBorderSettings[ColorSettings.sashHover] = color;
@@ -538,13 +711,17 @@ function getAllUserSettings() {
   const surpriseMeOnStartup = getSurpriseMeOnStartup();
   const darkForegroundColor = getDarkForegroundColor();
   const lightForegroundColor = getLightForegroundColor();
+  const cursorThemeFamily = getCursorThemeFamily();
   const {
     activityBar: affectActivityBar,
     statusBar: affectStatusBar,
     debuggingStatusBar: affectDebuggingStatusBar,
     titleBar: affectTitleBar,
     editorGroupBorder: affectEditorGroupBorder,
+    frameIndicators: affectFrameIndicators,
+    panelBackground: affectPanelBackground,
     panelBorder: affectPanelBorder,
+    sideBarBackground: affectSideBarBackground,
     sideBarBorder: affectSideBarBorder,
     sashHover: affectSashHover,
     tabActiveBorder: affectTabActiveBorder,
@@ -557,12 +734,16 @@ function getAllUserSettings() {
     surpriseMeOnStartup,
     darkForegroundColor,
     lightForegroundColor,
+    cursorThemeFamily,
     affectActivityBar,
     affectStatusBar,
     affectDebuggingStatusBar,
     affectTitleBar,
     affectEditorGroupBorder,
+    affectFrameIndicators,
+    affectPanelBackground,
     affectPanelBorder,
+    affectSideBarBackground,
     affectSideBarBorder,
     affectSashHover,
     affectTabActiveBorder,

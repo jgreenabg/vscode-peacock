@@ -11,6 +11,7 @@ import {
   AffectedSettings,
   starterSetOfFavorites,
   isObjectEmpty,
+  CursorThemeFamily,
 } from '../models';
 import { Logger } from '../logging';
 import { getFavoriteColors, getColorCustomizationConfigFromWorkspace } from './read-configuration';
@@ -67,6 +68,10 @@ export async function updateKeepForegroundColor(value: boolean) {
 
 export async function updateKeepBadgeColor(value: boolean) {
   return await updateGlobalConfiguration(StandardSettings.KeepBadgeColor, value);
+}
+
+export async function updateCursorThemeFamily(value: CursorThemeFamily) {
+  return await updateGlobalConfiguration(StandardSettings.CursorThemeFamily, value);
 }
 
 export async function updateSquigglyBeGone(value: boolean) {
@@ -141,7 +146,10 @@ export async function updateAffectedElements(values: IPeacockAffectedElementSett
   await updateGlobalConfiguration(AffectedSettings.StatusBar, values.statusBar);
   await updateGlobalConfiguration(AffectedSettings.TitleBar, values.titleBar);
   await updateGlobalConfiguration(AffectedSettings.EditorGroupBorder, values.editorGroupBorder);
+  await updateGlobalConfiguration(AffectedSettings.FrameIndicators, values.frameIndicators);
+  await updateGlobalConfiguration(AffectedSettings.PanelBackground, values.panelBackground);
   await updateGlobalConfiguration(AffectedSettings.PanelBorder, values.panelBorder);
+  await updateGlobalConfiguration(AffectedSettings.SideBarBackground, values.sideBarBackground);
   await updateGlobalConfiguration(AffectedSettings.SideBarBorder, values.sideBarBorder);
   await updateGlobalConfiguration(AffectedSettings.SashHover, values.sashHover);
   await updateGlobalConfiguration(

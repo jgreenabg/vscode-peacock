@@ -67,15 +67,18 @@ function addSubscriptions() {
   State.extensionContext.subscriptions.push(Logger.getChannel());
 
   State.extensionContext.subscriptions.push(workspace.onDidChangeConfiguration(applyPeacock));
+  State.extensionContext.subscriptions.push(
+    vscode.window.onDidChangeActiveColorTheme(reapplyPeacockForActiveTheme),
+  );
 }
 
 export async function applyPeacock(e: vscode.ConfigurationChangeEvent) {
   const color = getEnvironmentAwareColor();
   const appliedColor = getCurrentColorBeforeAdjustments();
-  const shouldReapply =
-    checkIfPeacockSettingsChanged(e) || e.affectsConfiguration('workbench.colorTheme');
+  const colorToApply = color || appliedColor;
+  const shouldReapply = checkIfPeacockSettingsChanged(e);
 
-  if (shouldReapply && (color || appliedColor)) {
+  if (shouldReapply && colorToApply) {
     /**
      * If relevant settings have changed
      * AND (either we have a peacock.color/remoteColor to apply
@@ -85,15 +88,27 @@ export async function applyPeacock(e: vscode.ConfigurationChangeEvent) {
     Logger.info(
       `${extensionShortName}: Configuration changed. Changing the color to most recently selected color: ${color}`,
     );
-    await applyColor(color);
+    await applyColor(colorToApply);
 
     // Only update the color in the workspace settings
     // if there was already a workspace setting
     const colorSource = inspectColor();
     if (colorSource.colorSource === ColorSource.WorkspaceValue) {
-      await updateColorSetting(color);
+      await updateColorSetting(colorToApply);
     }
   }
+}
+
+export async function reapplyPeacockForActiveTheme() {
+  const color = getEnvironmentAwareColor() || getCurrentColorBeforeAdjustments();
+  if (!color) {
+    return;
+  }
+
+  Logger.info(
+    `${extensionShortName}: Active color theme changed. Reapplying the most recently selected color: ${color}`,
+  );
+  await applyColor(color);
 }
 
 function registerCommands() {

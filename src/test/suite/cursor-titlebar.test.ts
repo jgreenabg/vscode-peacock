@@ -7,9 +7,16 @@ import {
   getColorCustomizationConfigFromWorkspace,
   updateKeepForegroundColor,
   updatePeacockColor,
+  updateCursorThemeFamily,
 } from '../../configuration';
-import { applyPeacock } from '../../extension';
-import { ColorSettings, ForegroundColors, IPeacockSettings, ReadabilityRatios } from '../../models';
+import { reapplyPeacockForActiveTheme } from '../../extension';
+import {
+  ColorSettings,
+  CursorThemeFamily,
+  ForegroundColors,
+  IPeacockSettings,
+  ReadabilityRatios,
+} from '../../models';
 import { getReadabilityRatio } from '../../color-library';
 import { setupTest, setupTestSuite, teardownTestSuite } from './lib/setup-teardown-test-suite';
 
@@ -30,6 +37,7 @@ suite('Cursor title bar theme compatibility', () => {
     appNameStub = undefined;
     activeThemeStub = undefined;
     await updateKeepForegroundColor(false);
+    await updateCursorThemeFamily(CursorThemeFamily.Auto);
     await updatePeacockColor(undefined);
   });
 
@@ -115,6 +123,17 @@ suite('Cursor title bar theme compatibility', () => {
     assert.equal(config[ColorSettings.titleBar_activeForeground], ForegroundColors.LightForeground);
   });
 
+  test('uses an explicit Cursor theme family override', async () => {
+    stubHost('Cursor', vscode.ColorThemeKind.Dark);
+    await updateCursorThemeFamily(CursorThemeFamily.Light);
+
+    await applyColor(darkPeacockColor);
+    const config = getColorCustomizationConfigFromWorkspace();
+
+    assert.notEqual(config[ColorSettings.titleBar_activeBackground], darkPeacockColor);
+    assert.equal(config[ColorSettings.titleBar_activeForeground], ForegroundColors.DarkForeground);
+  });
+
   test('adapts the background without writing foreground overrides when requested', async () => {
     stubHost('Cursor', vscode.ColorThemeKind.Light);
     await updateKeepForegroundColor(true);
@@ -127,7 +146,7 @@ suite('Cursor title bar theme compatibility', () => {
     assert.ok(!config[ColorSettings.commandCenter_foreground]);
   });
 
-  test('reapplies the current color when the normal theme changes', async () => {
+  test('reapplies the current color when the active theme changes', async () => {
     stubHost('Cursor', vscode.ColorThemeKind.Light);
     await updatePeacockColor(darkPeacockColor);
     await applyColor(darkPeacockColor);
@@ -136,10 +155,7 @@ suite('Cursor title bar theme compatibility', () => {
     assert.notEqual(config[ColorSettings.titleBar_activeBackground], darkPeacockColor);
 
     stubTheme(vscode.ColorThemeKind.Dark);
-    const themeChange = {
-      affectsConfiguration: (section: string) => section === 'workbench.colorTheme',
-    } as vscode.ConfigurationChangeEvent;
-    await applyPeacock(themeChange);
+    await reapplyPeacockForActiveTheme();
 
     config = getColorCustomizationConfigFromWorkspace();
     assert.equal(config[ColorSettings.titleBar_activeBackground], darkPeacockColor);

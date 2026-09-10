@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { ColorSettings, extensionShortName, ISettingsIndexer } from './models';
+import { ColorSettings, extensionShortName, ISettingsIndexer, LegacyColorSettings } from './models';
 import {
   getColorCustomizationConfigFromWorkspace,
   prepareColors,
@@ -45,7 +45,7 @@ function mergeColorCustomizations(
    * If any existing color settings are not in the set
    * that Peacock manages, remove them.
    */
-  Object.values(ColorSettings)
+  [...Object.values(ColorSettings), ...Object.values(LegacyColorSettings)]
     .filter(c => !(c in updatedColors))
     .forEach(c => delete existingColorsClone[c]);
 

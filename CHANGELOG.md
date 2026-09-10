@@ -29,6 +29,10 @@ All notable changes to the Peacock extension will be documented in this file.
 - Fix glob v10 API usage in test suite runner
 - Fix Mocha 10 type compatibility in built-in-colors tests
 - Update istanbul coverage report generation for newer API
+- Constrain random colors to moderate saturation and theme-family-aware lightness
+- Select light or dark foreground colors by actual contrast instead of a brightness cutoff
+- Derive Cursor border colors from their local surfaces at subtle, structural, or strong contrast tiers
+- Default `peacock.affectSashHover` to false because Cursor applies it to editor split sashes
 
 ### Added
 
@@ -37,6 +41,9 @@ All notable changes to the Peacock extension will be documented in this file.
 - Add `activityBarTop.*` tokens for top activity bar layout (Cursor default)
 - Expand `commandCenter.*` coverage (background, foreground, active, inactive variants)
 - Wire new tokens into color assembly logic for modern layouts
+- Add the Cursor-only `peacock.cursorThemeFamily` override for incorrectly reported theme families
+- Add opt-in Cursor side bar and bottom panel backgrounds, including scoped title, section header, and sticky-row tints, using solid variants derived from the Peacock hue without changing editor surfaces
+- Add opt-in `peacock.affectFrameIndicators` for stronger Cursor active, focus, and drop borders
 - Add GitHub Actions CI workflow (lint, compile, test on push/PR)
 - Unskip status bar test suite
 
@@ -45,3 +52,6 @@ All notable changes to the Peacock extension will be documented in this file.
 - Fix command disposable leak — all `registerCommand()` results now pushed to subscriptions
 - Move StatusBarItem creation from module scope to lazy initialization
 - Keep Cursor editor toolbar icons visible when Peacock and the active theme use opposite light or dark color families
+- Reapply Peacock colors from the active-theme event and honor the Cursor theme-family override
+- Replace the unsupported `activityBarTop.activeForeground` token and clean up stale values
+- Stop emitting Cursor's broadly reused `commandCenter.inactiveBorder`, keep `panel.border` subtle, and leave central editor group borders theme-controlled

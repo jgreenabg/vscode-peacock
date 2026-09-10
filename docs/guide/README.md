@@ -49,13 +49,17 @@ Commands can be found in the command palette. Look for commands beginning with "
 | peacock.affectStatusBar             | Specifies whether Peacock should affect the status bar                                                              |
 | peacock.affectDebuggingStatusBar    | Specifies whether Peacock should affect the status bar while debugging. Defaults to false.                          |
 | peacock.affectTitleBar              | Specifies whether Peacock should affect the title bar (see [title bar coloring](#title-bar-coloring))               |
-| peacock.affectEditorGroupBorder     | Specifies whether Peacock should affect the editorGroup border. Defaults to false.                                  |
+| peacock.affectEditorGroupBorder     | VS Code only. Colors editor group borders; Cursor keeps central editor borders theme-controlled.                    |
+| peacock.affectFrameIndicators       | Cursor-focused stronger active, focus, and drop borders. Defaults to false.                                         |
+| peacock.affectPanelBackground       | Cursor only. Tints the bottom panel, section headers, and sticky rows. Defaults to false.                            |
 | peacock.affectPanelBorder           | Specifies whether Peacock should affect the panel border. Defaults to false.                                        |
+| peacock.affectSideBarBackground     | Cursor only. Tints side/auxiliary bars, titles, section headers, and sticky rows. Defaults to false.                 |
 | peacock.affectSideBarBorder         | Specifies whether Peacock should affect the sideBar border. Defaults to false.                                      |
-| peacock.affectSashHover             | Specifies whether Peacock should affect the sash border. Defaults to true.                                          |
+| peacock.affectSashHover             | Colors draggable sash hover borders, including editor splits. Defaults to false.                                    |
 | peacock.affectStatusAndTitleBorders | Specifies whether Peacock should affect the status or title borders. Defaults to false.                             |
 | peacock.affectTabActiveBorder       | Specifies whether Peacock should affect the active tab's border. Defaults to false                                  |
 | peacock.elementAdjustments          | fine tune coloring of affected elements                                                                             |
+| peacock.cursorThemeFamily           | Cursor-only `auto`, `light`, or `dark` override for themes that report the wrong family. Defaults to `auto`.         |
 | peacock.favoriteColors              | array of objects for color names and hex values                                                                     |
 | peacock.keepForegroundColor         | Specifies whether Peacock should change affect colors                                                               |
 | peacock.surpriseMeOnStartup         | Specifies whether Peacock apply a random color on startup                                                           |
@@ -106,7 +110,11 @@ The `Peacock: Save Current Color as Favorite Color` feature allows you to save t
 
 ### Affected Elements
 
-You can tell peacock which parts of VS Code will be affected by when you select a color. You can do this by checking the appropriate setting that applies to the elements you want to be colored. These include examples such as affectEditorGroupBorder, affectPanelBorder, affectSideBarBorder, affectSashHover.
+You can tell Peacock which parts of VS Code or Cursor will be affected when you select a color. The Cursor-only `affectSideBarBackground` and `affectPanelBackground` settings are opt-in and use solid variants derived from the selected Peacock hue. They also tint scoped titles, section headers, and sticky rows; Cursor's side bar token colors the auxiliary bar. Border coloring remains controlled by the existing border settings.
+
+These settings do not change the center editor, editor tabs or group headers, rendered editor content, or Problems editors. Those areas continue to use the selected theme.
+
+Existing side bar, panel, status/title border settings use opaque hue-matched colors with measured contrast against their local Peacock surface. `peacock.affectFrameIndicators` adds stronger active, focus, and drop indicators only for affected Peacock surfaces. Cursor also reuses `panelTitle.activeBorder` in auxiliary, Settings, and extension tabs, so the stronger indicator remains opt-in.
 
 ![affected elements](../assets/affected-settings.png)
 
@@ -146,6 +154,8 @@ Recommended to remain `false` (the default value).
 When set to true Peacock will automatically apply a random color when opening a workspace that does not define color customizations. This can be useful if you frequently open many instances of VS Code and you are interested in identifying them, but are not overly committed to the specific color applied.
 
 If this setting is `true` and there is no peacock color set, then Peacock will choose a new color. If there is already a color set, Peacock will not choose a random color as this would prevent users from choosing a specific color for some workspaces and surprise in others.
+
+Random colors use a uniformly random hue with moderate saturation. Peacock chooses a darker accent for dark-family themes and a lighter accent for light-family themes.
 
 ### Lighten and Darken
 
@@ -240,6 +250,8 @@ All formats offer flexible data validation:
 - For any hex value, the `#` is optional.
 - For any color formula value all parentheses and commas are optional and any number can be a decimal or percentage (with the exception of the alpha channel in rgba(), hsla(), and hsva() which must be a decimal between 0 and 1).
 
+Workbench color customizations accept solid color values, including colors with alpha; they do not accept gradients. Peacock's derived side bar and panel variants are opaque solid colors because the underlying resolved theme surface colors are unavailable to extensions.
+
 ### Alpha Support
 
 Peacock allows for control of the alpha channel through a variety of input formats listed above. In general, it is recommended to avoid using transparent colors because it may result in poor readability. This is due to elements being affected by Peacock rendering over the VS Code workbench which will have either a light or a dark background based on the current theme. At the current time, extensions within VS Code do not have access to information about the current workbench color which will impact the readability calculations that Peacock performs to select various element colors based on the entered color. See [#293](https://github.com/johnpapa/vscode-peacock/issues/293#issuecomment-548968718) for more information.
@@ -326,37 +338,11 @@ A successful and recommended settings configuration to colorize the Title Bar is
 
 Cursor uses the title bar foreground color for some editor toolbar icons, including the New Agent actions. When a Peacock title bar and the active Cursor theme belong to opposite light or dark color families, Peacock adjusts only the title bar shade to match the theme while preserving the selected hue. This keeps the shared foreground readable; activity bar and status bar colors remain unchanged. VS Code retains the standard Peacock title bar behavior.
 
+By default, `peacock.cursorThemeFamily` maps Cursor's Light and High Contrast Light theme kinds to the light family and Dark and High Contrast kinds to the dark family. Set it to `light` or `dark` when a Cursor theme reports the wrong kind; the explicit value also controls random accent lightness and optional side bar or panel variants.
+
 ### How are foreground colors calculated
 
-Peacock is using tinycolor which provides some basic color theory mechanisms to determine whether or not to show a light or dark foreground color based on the perceived brightness of the background. More or less, if it thinks the background is darker than 50% then Peacock uses the light foreground. If it thinks the background is greater than 50% then Peacock uses the dark foreground.
-
-Brightness is measured on a scale of 0-255 where a value of 127.5 is perfectly 50%.
-
-Example:
-
-```javascript
-const lightForeground = '#e7e7e7';
-const darkForegound = '#15202b';
-const background = '#498aff';
-
-const perceivedBrightness = tinycolor(background).getBrightness(); // 131.903, so 51.7%
-const isDark = tinycolor(background).isDark(); // false, since brightness is above 50%
-const textColor = isDark ? lightForeground : darkForeground; // We end up using dark text
-```
-
-This particular color (`#498aff`) is very near 50% on the perceived brightness, but the determination is binary so the color is either light or dark based on which side of 50% it is (exactly 50% is considered as light by the library). For the particular color `#498aff`, all of the theory aspects that tinycolor provides show that using the dark foreground is the right approach.
-
-```javascript
-const readability = tinycolor.readability(darkForeground, background); // 4.996713
-const isReadable = tinycolor.isReadable(darkForeground, background); // true
-```
-
-The readability calculations and metrics are based on Web Content Accessibility Guidelines (Version 2.0) and, in general, a ratio close to 5 is considered good based on that information. If we run the lightForeground through the same algorithm you can see that readability actually suffers with a reduced contrast ratio:
-
-```javascript
-const readability = tinycolor.readability(lightForeground, background); // 2.669008
-const isReadable = tinycolor.isReadable(lightForeground, background); // false
-```
+Peacock compares the actual tinycolor readability ratio of the configured dark and light foreground colors and chooses the stronger readable candidate. Text targets a 4.5:1 ratio and UI indicators target 3:1. User-defined foreground overrides remain the candidates, so an override with insufficient contrast cannot always meet the target.
 
 ### Why is the foreground hard to see with my transparent color
 

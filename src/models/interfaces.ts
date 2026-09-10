@@ -1,4 +1,4 @@
-import { ColorAdjustment, ElementNames } from './enums';
+import { ColorAdjustment, CursorThemeFamily, ElementNames } from './enums';
 
 export interface ISettingsIndexer {
   [key: string]: any;
@@ -37,7 +37,10 @@ export interface IPeacockAffectedElementSettings {
   debuggingStatusBar: boolean;
   titleBar: boolean;
   editorGroupBorder: boolean;
+  frameIndicators: boolean;
+  panelBackground: boolean;
   panelBorder: boolean;
+  sideBarBackground: boolean;
   sideBarBorder: boolean;
   sashHover: boolean;
   statusAndTitleBorders: boolean;
@@ -50,6 +53,7 @@ export interface IPeacockElementAdjustments {
 
 export interface IPeacockSettings {
   affectedElements: IPeacockAffectedElementSettings;
+  cursorThemeFamily: CursorThemeFamily;
   editorGroupBorder: boolean;
   panelBorder: boolean;
   sideBarBorder: boolean;

@@ -35,8 +35,8 @@ suite('Foreground color', () => {
   );
 
   test(
-    'is set to light foreground on less than 50% bright backgrounds',
-    createForegroundTest('hsl (0, 0, 49%)', getLightForegroundColorOrOverride()),
+    'uses the stronger contrast near the brightness midpoint',
+    createForegroundTest('hsl (0, 0, 49%)', getDarkForegroundColorOrOverride()),
   );
 
   test(

@@ -277,7 +277,10 @@ suite('Affected elements', () => {
         titleBar: true,
         tabActiveBorder: true,
         editorGroupBorder: true,
+        frameIndicators: false,
+        panelBackground: false,
         panelBorder: true,
+        sideBarBackground: false,
         sideBarBorder: true,
         sashHover: true,
         statusAndTitleBorders: false,
@@ -461,7 +464,7 @@ suite('Affected elements', () => {
       const value = config[ColorSettings.activityBar_badgeBackground];
       stub.restore();
 
-      assert.ok(getReadabilityRatio(backgroundHex, value) > ReadabilityRatios.UserInterfaceLow);
+      assert.ok(getReadabilityRatio(backgroundHex, value) >= ReadabilityRatios.UserInterface);
     }
   });
 });

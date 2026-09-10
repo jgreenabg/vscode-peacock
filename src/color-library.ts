@@ -8,12 +8,15 @@ import {
   ColorAdjustmentOptions,
   defaultAmountToDarkenLighten,
   defaultSaturation,
+  ThemeFamily,
+  LegacyColorSettings,
 } from './models';
 import {
   getColorCustomizationConfigFromWorkspace,
   getDarkForegroundColorOrOverride,
   getLightForegroundColorOrOverride,
 } from './configuration';
+import { createRandomPaletteColorHex, getContrastingForegroundColorHex } from './palette-library';
 
 export function getColorHex(color = '') {
   return formatHex(tinycolor(color));
@@ -36,11 +39,11 @@ export function getBackgroundHoverColorHex(backgroundColor = '') {
 }
 
 export function getForegroundColorHex(backgroundColor = '') {
-  const background = tinycolor(backgroundColor);
-  const foreground = background.isLight()
-    ? getDarkForegroundColorOrOverride()
-    : getLightForegroundColorOrOverride();
-  return formatHex(tinycolor(foreground));
+  return getContrastingForegroundColorHex(
+    backgroundColor,
+    getDarkForegroundColorOrOverride(),
+    getLightForegroundColorOrOverride(),
+  );
 }
 
 export function getThemeCompatibleBackgroundColorHex(
@@ -134,7 +137,7 @@ export function getReadableAccentColorHex(backgroundColor = '', ratio = Readabil
 }
 
 export function getBadgeBackgroundColorHex(backgroundColor = '') {
-  return getReadableAccentColorHex(backgroundColor, ReadabilityRatios.UserInterfaceLow);
+  return getReadableAccentColorHex(backgroundColor, ReadabilityRatios.UserInterface);
 }
 
 export function getDebuggingBackgroundColorHex(backgroundColor = '') {
@@ -161,8 +164,8 @@ export function getDarkenedColorHex(color: string, amount = defaultAmountToDarke
   return formatHex(tinycolor(color).darken(amount));
 }
 
-export function getRandomColorHex() {
-  return formatHex(tinycolor.random());
+export function getRandomColorHex(themeFamily = ThemeFamily.Dark) {
+  return createRandomPaletteColorHex(themeFamily);
 }
 
 export function getColorBrightness(input = '') {
@@ -186,6 +189,9 @@ export function deletePeacocksColorCustomizations() {
   const newColorCustomizations = getColorCustomizationConfigFromWorkspace();
 
   Object.values(ColorSettings).forEach(setting => {
+    delete newColorCustomizations[setting];
+  });
+  Object.values(LegacyColorSettings).forEach(setting => {
     delete newColorCustomizations[setting];
   });
   return newColorCustomizations;

@@ -20,6 +20,9 @@ export const allAffectedElements = {
   activityBar: true,
   statusBar: true,
   titleBar: true,
+  frameIndicators: false,
+  panelBackground: false,
+  sideBarBackground: false,
 } as IPeacockAffectedElementSettings;
 
 export const stubQuickPick = async (fakeResponse: string) =>

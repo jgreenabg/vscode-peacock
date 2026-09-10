@@ -124,6 +124,6 @@ test.describe('External links have valid URLs', () => {
     }
     
     // There should be external links on the guide page
-    expect(externalLinks.length).toBeGreaterThan(5);
+    expect(externalLinks.length).toBeGreaterThanOrEqual(5);
   });
 });

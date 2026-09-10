@@ -32,7 +32,7 @@ test.describe('Sidebar Navigation', () => {
     await page.locator('.markdown-section h1').waitFor({ timeout: 15000 });
 
     await expect(page).toHaveURL(/#\/guide\//);
-    await expect(page.locator('.markdown-section h1').first()).toContainText('Peacock for Visual Studio Code');
+    await expect(page.locator('.markdown-section h1').first()).toContainText('Guide');
   });
 
   test('clicking Changelog navigates to changelog page', async ({ page }) => {

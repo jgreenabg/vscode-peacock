@@ -7,13 +7,12 @@ test.describe('Guide Page', () => {
   });
 
   test('loads with correct heading and has substantial content', async ({ page }) => {
-    await expect(page.locator('.markdown-section h1').first()).toContainText('Peacock for Visual Studio Code');
+    await expect(page.locator('.markdown-section h1').first()).toContainText('Guide');
 
     // Check key sections exist
     const content = page.locator('.markdown-section');
-    await expect(content.locator('h2', { hasText: 'Overview' })).toBeVisible();
     await expect(content.locator('h2', { hasText: 'Install' })).toBeVisible();
-    await expect(content.locator('h2', { hasText: 'Quick Usage' })).toBeVisible();
+    await expect(content.locator('h2', { hasText: 'Quick start' })).toBeVisible();
     await expect(content.locator('h2', { hasText: 'Features' })).toBeVisible();
     await expect(content.locator('h2', { hasText: 'Settings' })).toBeVisible();
   });

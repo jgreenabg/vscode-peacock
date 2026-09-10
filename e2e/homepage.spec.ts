@@ -27,21 +27,20 @@ test.describe('Homepage', () => {
     expect(naturalWidth).toBeGreaterThan(0);
   });
 
-  test('features section has all 3 items', async ({ page }) => {
+  test('features section has 2 items', async ({ page }) => {
     const featuresHeading = page.locator('.markdown-section h2', { hasText: 'Features' });
     await expect(featuresHeading).toBeVisible();
 
     const featuresList = page.locator('.markdown-section ul').first();
     const items = featuresList.locator('li');
-    await expect(items).toHaveCount(3);
+    await expect(items).toHaveCount(2);
 
-    await expect(items.nth(0)).toContainText('Work More Efficiently');
-    await expect(items.nth(1)).toContainText('Remote Integration');
-    await expect(items.nth(2)).toContainText('Live Share');
+    await expect(items.nth(0)).toContainText('favorite color');
+    await expect(items.nth(1)).toContainText('Remote');
   });
 
   test('quick start section has 4 ordered list items', async ({ page }) => {
-    const quickStartHeading = page.locator('.markdown-section h2', { hasText: 'Quick Start' });
+    const quickStartHeading = page.locator('.markdown-section h2', { hasText: 'Quick start' });
     await expect(quickStartHeading).toBeVisible();
 
     const orderedList = page.locator('.markdown-section ol');
@@ -55,9 +54,9 @@ test.describe('Homepage', () => {
     await expect(link).toHaveAttribute('href', /guide/);
   });
 
-  test('blockquote description text is visible', async ({ page }) => {
-    const blockquote = page.locator('.markdown-section blockquote');
-    await expect(blockquote).toBeVisible();
-    await expect(blockquote).toContainText('Subtly change the color');
+  test('intro description text is visible', async ({ page }) => {
+    const intro = page.locator('.markdown-section > p').first();
+    await expect(intro).toBeVisible();
+    await expect(intro).toContainText('tell open editors apart');
   });
 });

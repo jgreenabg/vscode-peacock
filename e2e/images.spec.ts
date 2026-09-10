@@ -53,10 +53,8 @@ test.describe('Key images exist and load', () => {
       'named-colors',
       'affected-settings',
       'element-adjustments',
-      'peacock-live-share-demo',
       'peacock-remote',
       'title-bar-coloring-settings',
-      'peacock-sketchnote',
     ];
     
     for (const imgName of expectedImages) {

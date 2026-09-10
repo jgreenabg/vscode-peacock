@@ -52,11 +52,19 @@ test.describe('CSS Styling', () => {
     expect(color).toBe('rgb(66, 184, 131)');
   });
 
-  test('blockquotes have green left border', async ({ page }) => {
-    const blockquote = page.locator('.markdown-section blockquote').first();
-    const borderColor = await blockquote.evaluate((el) => {
-      return window.getComputedStyle(el).borderLeftColor;
+  test('blockquote CSS uses green left border', async ({ page }) => {
+    const borderColor = await page.evaluate(() => {
+      const el = document.createElement('blockquote');
+      el.className = 'markdown-section-probe';
+      const wrap = document.createElement('div');
+      wrap.className = 'markdown-section';
+      wrap.appendChild(el);
+      document.body.appendChild(wrap);
+      const color = window.getComputedStyle(el).borderLeftColor;
+      wrap.remove();
+      return color;
     });
+    // #42b883 = rgb(66, 184, 131)
     expect(borderColor).toBe('rgb(66, 184, 131)');
   });
 

@@ -1,90 +1,73 @@
-# Peacock for Visual Studio Code
+# Guide
 
-## Overview
-
-Subtly change the color of your Visual Studio Code workspace. Ideal when you have multiple VS Code instances, use VS Live Share, or use VS Code's Remote features, and you want to quickly identify your editor.
+Peacock colors your VS Code or Cursor workspace so you can tell open editors apart. It works best with multiple windows or Remote sessions.
 
 ## Install
 
-1. Open **Extensions** sideBar panel in Visual Studio Code via the menu item `View → Extensions`
+1. Open **Extensions** (`View → Extensions`)
 1. Search for **Peacock**
 1. Click **Install**
-1. Click **Reload**, if required
+1. Click **Reload** if prompted
 
-> You can also [install Peacock from the marketplace here](https://marketplace.visualstudio.com/items?itemName=johnpapa.vscode-peacock&wt.mc_id=vscodepeacock-github-jopapa)
+Or install from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=johnpapa.vscode-peacock&wt.mc_id=vscodepeacock-github-jopapa).
 
-## Quick Usage
+## Quick start
 
-Let's see Peacock in action!
+Peacock only works in a workspace. See [Peacock commands are not appearing](#peacock-commands-are-not-appearing).
 
-1. Create/Open a VSCode Workspace ([Peacock only works in a Workspace](/guide/#peacock-commands-are-not-appearing))
+1. Open a workspace
 1. Press `F1` to open the command palette
 1. Type `Peacock`
-1. Choose `Peacock: Change to a favorite color`
-1. Choose one of the pre-defined colors and see how it changes your editor
-
-Now enjoy exploring the rest of the features explained in the docs, here!
+1. Choose `Peacock: Change to a Favorite Color`
+1. Pick a color
 
 ![Peacock Windows](../assets/peacock-windows.png 'Peacock Windows')
 
 ## Features
 
-Commands can be found in the command palette. Look for commands beginning with "Peacock:"
+All commands start with `Peacock:` in the command palette.
 
-- Change the color of [Affected Elements](#affected-elements) (see `peacock.affect*` in the [Settings](#settings) section) to
-  - [user defined color](#input-formats)
-  - a random color
-- Select a user-defined color from your [Favorite Colors](#favorite-colors)
-- Save a user-defined color with the [Save Favorite Color](#save-favorite-color)
-- [Adjust the coloring of affected elements](#element-adjustments) by making them slightly darker or lighter to provide a subtle visual contrast between them
-- Saves colors to your workspace in the `.vscode/settings.json` file
-- Integrates with [Live Share](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare&wt.mc_id=vscodepeacock-github-jopapa).
-- Integrates with [VS Code Remote](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack&wt.mc_id=vscodepeacock-github-jopapa).
+- Color [affected elements](#affected-elements) with a [user-defined](#input-formats) or random color
+- Pick from [favorite colors](#favorite-colors)
+- [Save the current color](#save-favorite-color) as a favorite
+- [Lighten or darken](#element-adjustments) affected elements for contrast
+- Persist colors in workspace `.vscode/settings.json`
+- Integrate with [VS Code Remote](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack&wt.mc_id=vscodepeacock-github-jopapa)
 
 ## Settings
 
-| Property                            | Description                                                                                                         |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| peacock.affectActivityBar           | Specifies whether Peacock should affect the activity bar                                                            |
-| peacock.affectStatusBar             | Specifies whether Peacock should affect the status bar                                                              |
-| peacock.affectDebuggingStatusBar    | Specifies whether Peacock should affect the status bar while debugging. Defaults to false.                          |
-| peacock.affectTitleBar              | Specifies whether Peacock should affect the title bar (see [title bar coloring](#title-bar-coloring))               |
-| peacock.affectEditorGroupBorder     | VS Code only. Colors editor group borders; Cursor keeps central editor borders theme-controlled.                    |
-| peacock.affectFrameIndicators       | Cursor-focused stronger active, focus, and drop borders. Defaults to false.                                         |
-| peacock.affectPanelBackground       | Cursor only. Tints the bottom panel, section headers, and sticky rows. Defaults to false.                            |
-| peacock.affectPanelBorder           | Specifies whether Peacock should affect the panel border. Defaults to false.                                        |
-| peacock.affectSideBarBackground     | Cursor only. Tints side/auxiliary bars, titles, section headers, and sticky rows. Defaults to false.                 |
-| peacock.affectSideBarBorder         | Specifies whether Peacock should affect the sideBar border. Defaults to false.                                      |
-| peacock.affectSashHover             | Colors draggable sash hover borders, including editor splits. Defaults to false.                                    |
-| peacock.affectStatusAndTitleBorders | Specifies whether Peacock should affect the status or title borders. Defaults to false.                             |
-| peacock.affectTabActiveBorder       | Specifies whether Peacock should affect the active tab's border. Defaults to false                                  |
-| peacock.elementAdjustments          | fine tune coloring of affected elements                                                                             |
-| peacock.cursorThemeFamily           | Cursor-only `auto`, `light`, or `dark` override for themes that report the wrong family. Defaults to `auto`.         |
-| peacock.favoriteColors              | array of objects for color names and hex values                                                                     |
-| peacock.keepForegroundColor         | Specifies whether Peacock should change affect colors                                                               |
-| peacock.surpriseMeOnStartup         | Specifies whether Peacock apply a random color on startup                                                           |
-| peacock.darkForeground              | override for the dark foreground                                                                                    |
-| peacock.lightForeground             | override for the light foreground                                                                                   |
-| peacock.darkenLightenPercentage     | the percentage to darken or lighten the color                                                                       |
-| peacock.surpriseMeFromFavoritesOnly | Specifies whether Peacock should choose a random color from the favorites list or a purely random color             |
-| peacock.showColorInStatusBar        | Show the Peacock color in the status bar                                                                            |
-| peacock.remoteColor                 | The Peacock color that will be applied to remote workspaces                                                         |
-| peacock.color                       | The Peacock color that will be applied to workspaces                                                                |
-| peacock.vslsShareColor              | Peacock color for Live Share Color when acting as a Guest                                                           |
-| peacock.vslsJoinColor               | Peacock color for Live Share color when acting as the Host                                                          |
-| peacock.squigglyBeGone              | Easter Egg feature for FUN. Hides all error, warning, and info underlines. This setting has NO effect on your code. |
+| Property | Description |
+| --- | --- |
+| peacock.affectActivityBar | Color the activity bar |
+| peacock.affectStatusBar | Color the status bar |
+| peacock.affectDebuggingStatusBar | Color the status bar while debugging. Defaults to false |
+| peacock.affectTitleBar | Color the title bar (see [title bar coloring](#title-bar-coloring)) |
+| peacock.affectEditorGroupBorder | VS Code only. Color editor group borders; Cursor keeps central editor borders theme-controlled |
+| peacock.affectFrameIndicators | Cursor-focused stronger active, focus, and drop borders. Defaults to false |
+| peacock.affectPanelBackground | Cursor only. Tint the bottom panel, section headers, and sticky rows. Defaults to false |
+| peacock.affectPanelBorder | Color the panel border. Defaults to false |
+| peacock.affectSideBarBackground | Cursor only. Tint side/auxiliary bars, titles, section headers, and sticky rows. Defaults to false |
+| peacock.affectSideBarBorder | Color the side bar border. Defaults to false |
+| peacock.affectSashHover | Color draggable sash hover borders, including editor splits. Defaults to false |
+| peacock.affectStatusAndTitleBorders | Color status or title borders. Defaults to false |
+| peacock.affectTabActiveBorder | Color the active tab border. Defaults to false |
+| peacock.elementAdjustments | Fine-tune coloring of affected elements |
+| peacock.cursorThemeFamily | Cursor-only `auto`, `light`, or `dark` override for themes that report the wrong family. Defaults to `auto` |
+| peacock.favoriteColors | Array of objects for color names and hex values |
+| peacock.keepForegroundColor | Skip foreground colorization; background only |
+| peacock.surpriseMeOnStartup | Apply a random color on startup when none is set |
+| peacock.darkForeground | Override for the dark foreground |
+| peacock.lightForeground | Override for the light foreground |
+| peacock.darkenLightenPercentage | Percentage to darken or lighten the color |
+| peacock.surpriseMeFromFavoritesOnly | Limit random colors to the favorites list |
+| peacock.showColorInStatusBar | Show the Peacock color in the status bar |
+| peacock.remoteColor | Color applied to remote workspaces |
+| peacock.color | Color applied to workspaces |
+| peacock.squigglyBeGone | Easter egg. Hides error, warning, and info underlines. Does not change your code |
 
-### Favorite Colors
+### Favorite colors
 
-After setting 1 or more colors (hex or named) in the user setting for `peacock.favoriteColors`, you can select **Peacock: Change to a Favorite Color** and you will be prompted with the list from `peacock.favoriteColors` from user settings.
-
-```text
-Gatsby Purple -> #123456
-Auth0 Orange -> #eb5424
-Azure Blue -> #007fff
-```
-
-Favorite colors require a user-defined name (`name`) and a value ( `value` ), as shown in the example below.
+Set one or more colors in user setting `peacock.favoriteColors`, then run **Peacock: Change to a Favorite Color**.
 
 ```javascript
   "peacock.favoriteColors": [
@@ -94,39 +77,37 @@ Favorite colors require a user-defined name (`name`) and a value ( `value` ), as
   ]
 ```
 
-> You can find brand color hex codes from <https://brandcolors.net>
+Each favorite needs a `name` and a `value`. Brand hex codes: <https://brandcolors.net>
 
-#### Preview Your Favorite
+#### Preview favorites
 
-When opening the Favorites command in the command palette, Peacock now previews (applies) the color as you cycle through them. If you cancel (press ESC), your colors revert to what you had prior to trying the Favorites command
+Cycling favorites in the command palette applies each color as a preview. Press ESC to revert.
 
 ![favorites](../assets/named-colors.gif)
 
-#### Save Favorite Color
+#### Save favorite color
 
-When you apply a color you enjoy, you can go to the workspace `settings.json` and copy the color's hex code, then create your own favorite color in your user `settings.json`. This involves a few manual steps and arguably is not obvious at first.
+Run `Peacock: Save Current Color as Favorite Color` to name and store the current color in user settings.
 
-The `Peacock: Save Current Color as Favorite Color` feature allows you to save the currently set color as a favorite color, and prompts you to name it.
+### Affected elements
 
-### Affected Elements
+Choose which parts of VS Code or Cursor change when you pick a color. Cursor-only `affectSideBarBackground` and `affectPanelBackground` are opt-in. They use solid variants of the Peacock hue and also tint scoped titles, section headers, and sticky rows. Cursor's side bar token colors the auxiliary bar. Border coloring stays under the border settings.
 
-You can tell Peacock which parts of VS Code or Cursor will be affected when you select a color. The Cursor-only `affectSideBarBackground` and `affectPanelBackground` settings are opt-in and use solid variants derived from the selected Peacock hue. They also tint scoped titles, section headers, and sticky rows; Cursor's side bar token colors the auxiliary bar. Border coloring remains controlled by the existing border settings.
+These settings don't change the center editor, editor tabs or group headers, rendered editor content, or Problems editors. Those keep the selected theme.
 
-These settings do not change the center editor, editor tabs or group headers, rendered editor content, or Problems editors. Those areas continue to use the selected theme.
-
-Existing side bar, panel, status/title border settings use opaque hue-matched colors with measured contrast against their local Peacock surface. `peacock.affectFrameIndicators` adds stronger active, focus, and drop indicators only for affected Peacock surfaces. Cursor also reuses `panelTitle.activeBorder` in auxiliary, Settings, and extension tabs, so the stronger indicator remains opt-in.
+Side bar, panel, and status/title border settings use opaque hue-matched colors with measured contrast against their local Peacock surface. `peacock.affectFrameIndicators` adds stronger active, focus, and drop indicators only on affected Peacock surfaces. Cursor reuses `panelTitle.activeBorder` in auxiliary, Settings, and extension tabs, so the stronger indicator stays opt-in.
 
 ![affected elements](../assets/affected-settings.png)
 
-### Element Adjustments
+### Element adjustments
 
-You can fine tune the coloring of affected elements by making them slightly darker or lighter to provide a subtle visual contrast between them. Options for adjusting elements are:
+Fine-tune affected elements for contrast:
 
-- `"darken"`: reduces the value of the selected color to make it slightly darker
-- `"lighten"`: increases the value of the selected color to make it slightly lighter
-- `"none"`: no adjustment will be made to the selected color
+- `"darken"`: slightly darker
+- `"lighten"`: slightly lighter
+- `"none"`: no adjustment
 
-An example of using this might be to make the Activity Bar slightly lighter than the Status Bar and Title Bar to better visually distinguish it as present in several popular themes. This can be achieved with the setting in the example below.
+Example: lighten the Activity Bar relative to Status Bar and Title Bar.
 
 ```javascript
   "peacock.affectActivityBar": true,
@@ -137,260 +118,168 @@ An example of using this might be to make the Activity Bar slightly lighter than
   }
 ```
 
-This results in the Activity Bar being slightly lighter than the Status Bar and Title Bar (see below).
-
 ![Element Adjustments](../assets/element-adjustments.png)
 
-### Keep Foreground Color
+### Keep foreground color
 
-Recommended to remain `false` (the default value).
+Default is `false`. When `true`, Peacock changes backgrounds only and leaves theme foregrounds alone.
 
-When set to true Peacock will not colorize the foreground of any of the affected elements and will only alter the background. Some users may desire this if their theme's foreground is their preference over Peacock. In this case, when set to true, the foreground will not be affected.
+### Surprise me on startup
 
-### Surprise Me On Startup
+Default is `false`. When `true`, Peacock applies a random color to workspaces that don't already have a Peacock color. Existing colors are left alone.
 
-Recommended to remain `false` (the default value).
+Random colors use a uniform hue with moderate saturation. Dark-family themes get a darker accent; light-family themes get a lighter one.
 
-When set to true Peacock will automatically apply a random color when opening a workspace that does not define color customizations. This can be useful if you frequently open many instances of VS Code and you are interested in identifying them, but are not overly committed to the specific color applied.
+### Lighten and darken
 
-If this setting is `true` and there is no peacock color set, then Peacock will choose a new color. If there is already a color set, Peacock will not choose a random color as this would prevent users from choosing a specific color for some workspaces and surprise in others.
+Use the lighten/darken [commands](#commands) to adjust the current color by `darkenLightenPercentage` (1–10%).
 
-Random colors use a uniformly random hue with moderate saturation. Peacock chooses a darker accent for dark-family themes and a lighter accent for light-family themes.
-
-### Lighten and Darken
-
-You may like a color but want to lighten or darken it. You can do this through the corresponding [commands](#commands). When you choose one of these commands the current color will be lightened or darkened by the percentage that is in the `darkenLightenPercentage` setting. You may change this setting to be a value between 1 and 10 percent.
-
-There are key bindings for the lighten command `alt+cmd+=` and for darken command `alt+cmd+-`, to make it easier to adjust the colors.
+Shortcuts: `alt+cmd+=` (lighten), `alt+cmd+-` (darken).
 
 ## Commands
 
-| Command                                         | Description                                                                                                                        |
-| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Peacock: Reset Workspace Colors                 | Removes any of the color settings from the `.vscode/settings.json` file. If colors exist in the user settings, they may be applied |
-| Peacock: Remove All Global and Workspace Colors | Removes all of the color settings from both the Workspace `.vscode/settings.json` file and the Global user `settings.json` file.   |
-| Peacock: Enter a Color                          | Prompts you to enter a color (see [input formats](#input-formats))                                                                 |
-| Peacock: Color to Peacock Green                 | Sets the color to Peacock main color, #42b883                                                                                      |
-| Peacock: Surprise me with a Random Color        | Sets the color to a random color                                                                                                   |
-| Peacock: Change to a Favorite Color             | Prompts user to select from their Favorites                                                                                        |
-| Peacock: Save Current Color to Favorites        | Save Current Color to their Favorites                                                                                              |
-| Peacock: Add Recommended Favorites              | Add the recommended favorites to user settings (override same names)                                                               |
-| Peacock: Darken                                 | Darkens the current color by `darkenLightenPercentage`                                                                             |
-| Peacock: Lighten                                | Lightens the current color by `darkenLightenPercentage`                                                                            |
-| Peacock: Show and Copy Current Color            | Shows the current color and copies it to the clipboard                                                                             |
-| Peacock: Show the Documentation                 | Opens the Peacock documentation web site in a browser                                                                              |
+| Command | Description |
+| --- | --- |
+| Peacock: Reset Workspace Colors | Remove Peacock colors from workspace `.vscode/settings.json`. User settings may still apply |
+| Peacock: Remove All Global and Workspace Colors | Remove Peacock colors from workspace and user settings |
+| Peacock: Enter a Color | Prompt for a color (see [input formats](#input-formats)) |
+| Peacock: Color to Peacock Green | Set color to #42b883 |
+| Peacock: Surprise me with a Random Color | Set a random color |
+| Peacock: Change to a Favorite Color | Pick from favorites |
+| Peacock: Save Current Color to Favorites | Save current color to favorites |
+| Peacock: Add Recommended Favorites | Add recommended favorites to user settings (same names are overridden) |
+| Peacock: Darken | Darken by `darkenLightenPercentage` |
+| Peacock: Lighten | Lighten by `darkenLightenPercentage` |
+| Peacock: Show and Copy Current Color | Show current color and copy it to the clipboard |
+| Peacock: Show the Documentation | Open the docs site in a browser |
 
-## Keyboard Shortcuts
+## Keyboard shortcuts
 
-| description                     | key binding | command                     |
-| ------------------------------- | ----------- | --------------------------- |
-| Darken the colors               | alt+cmd+-   | peacock.darken              |
-| Lighten the colors              | alt+cmd+=   | peacock.lighten             |
-| Surprise Me with a Random Color | cmd+shift+k | peacock.changeColorToRandom |
+| Description | Key binding | Command |
+| --- | --- | --- |
+| Darken | alt+cmd+- | peacock.darken |
+| Lighten | alt+cmd+= | peacock.lighten |
+| Surprise me with a random color | cmd+shift+k | peacock.changeColorToRandom |
 
-## Integrations
+## Remote development
 
-Peacock integrates with other extensions, as described in this section.
+Peacock works with [VS Code Remote](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack&wt.mc_id=vscodepeacock-github-jopapa) (WSL, SSH, containers). All remote contexts share one color.
 
-### VS Live Share Integration
-
-![live share](../assets/peacock-live-share-demo.gif)
-
-Peacock detects when the [Live Share](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare&wt.mc_id=vscodepeacock-github-jopapa) extension is installed and automatically adds two commands that allow the user to change color of their Live Share sessions as a Host or a Guest, depending on their role.
-
-| Command                                  | Description                                                                    |
-| ---------------------------------------- | ------------------------------------------------------------------------------ |
-| Peacock: Change Live Share Color (Host)  | Prompts user to select a color for Live Share Host session from the Favorites  |
-| Peacock: Change Live Share Color (Guest) | Prompts user to select a color for Live Share Guest session from the Favorites |
-
-When a [Live Share](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare&wt.mc_id=vscodepeacock-github-jopapa) session is started, the selected workspace color will be applied. When the session is finished, the workspace color is reverted back to the previous one (if set).
-
-- Learn more about [Live Share](https://code.visualstudio.com/blogs/2017/11/15/live-share?wt.mc_id=vscodepeacock-github-jopapa)
-- Get the [Live Share extension](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare&wt.mc_id=vscodepeacock-github-jopapa)
-- Get the [Live Share extension pack](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare-pack&wt.mc_id=vscodepeacock-github-jopapa), which now includes Peacock
-
-### Remote Development Integration
-
-Peacock integrates with the Remote Development features of VS Code.
-
-- Learn more about [VS Code Remote Development](https://code.visualstudio.com/blogs/2019/05/02/remote-development?wt.mc_id=vscodepeacock-github-jopapa)
-- Get the [VS Code Remote Development Extensions](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack&wt.mc_id=vscodepeacock-github-jopapa)
-
-Peacock detects when the [VS Code Remote](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) extension is installed and adds commands that allow the user to change color when in a remote context. All remote contexts share the same color (wsl, ssh, containers).
-
-When a workspace is opened in a remote context, if a `peacock.remoteColor` is set, it will be applied. Otherwise, the regular `peacock.color` is applied.
+If `peacock.remoteColor` is set, remote workspaces use it. Otherwise they use `peacock.color`.
 
 ![Remote Integration with Peacock](../assets/peacock-remote.gif)
 
-VS Code distinguishes two classes of extensions: UI Extensions and Workspace Extensions. Peacock is classified as a UI extension as it makes contributions to the VS Code user interface and is always run on the user's local machine. UI Extensions cannot directly access files in the workspace, or run scripts/tools installed in that workspace or on the machine. Example UI Extensions include: themes, snippets, language grammars, and keymaps.
+Peacock is a UI extension (`"extensionKind": "ui"`). It runs on the local machine and doesn't access remote workspace files or tools.
 
-In version 2.1.2 Peacock enabled integration with the Remote Development by adding `"extensionKind": "ui"` in the extension's `package.json`.
+## Input formats
 
-## Input Formats
+| Format | Examples |
+| --- | --- |
+| Named HTML colors | purple, blanchedalmond |
+| Short Hex | #8b2, f00 |
+| Short Hex8 (RGBA) | #8b2c, f00c |
+| Hex | #88bb22, ff0000 |
+| Hex8 (RGBA) | #88bb22cc, ff0000cc |
+| RGB | rgb (136, 187, 34), rgb 255 0 0 |
+| RGBA | rgba (136, 187, 34, .8), rgba 255 0 0 .8 |
+| HSL | hsl (80, 69%, 43%), hsl (0 1 .5) |
+| HSLA | hsla (80, 69%, 43%, 0.8), hsla (0 1 .5 .8) |
+| HSV | hsv (80, 82%, 73%), hsv (0 1 1) |
+| HSVA | hsva (80, 82%, 73%, 0.8), hsva (0,100%,100%,0.8) |
 
-When entering a color in Peacock several formats are acceptable. These include
+Validation rules:
 
-| Format            | Examples                                         |
-| ----------------- | ------------------------------------------------ |
-| Named HTML colors | purple, blanchedalmond                           |
-| Short Hex         | #8b2, f00                                        |
-| Short Hex8 (RGBA) | #8b2c, f00c                                      |
-| Hex               | #88bb22, ff0000                                  |
-| Hex8 (RGBA)       | #88bb22cc, ff0000cc                              |
-| RGB               | rgb (136, 187, 34), rgb 255 0 0                  |
-| RGBA              | rgba (136, 187, 34, .8), rgba 255 0 0 .8         |
-| HSL               | hsl (80, 69%, 43%), hsl (0 1 .5)                 |
-| HSLA              | hsla (80, 69%, 43%, 0.8), hsla (0 1 .5 .8)       |
-| HSV               | hsv (80, 82%, 73%), hsv (0 1 1)                  |
-| HSVA              | hsva (80, 82%, 73%, 0.8), hsva (0,100%,100%,0.8) |
+- Named HTML colors are case-insensitive
+- `#` is optional on hex values
+- Parentheses and commas are optional in color formulas; numbers may be decimals or percentages, except alpha in rgba/hsla/hsva (decimal 0–1)
 
-All formats offer flexible data validation:
+Workbench customizations accept solid colors (including alpha), not gradients. Derived side bar and panel variants are opaque because extensions can't read resolved theme surface colors.
 
-- For named HTML colors, case is insensitive
-- For any hex value, the `#` is optional.
-- For any color formula value all parentheses and commas are optional and any number can be a decimal or percentage (with the exception of the alpha channel in rgba(), hsla(), and hsva() which must be a decimal between 0 and 1).
+### Alpha support
 
-Workbench color customizations accept solid color values, including colors with alpha; they do not accept gradients. Peacock's derived side bar and panel variants are opaque solid colors because the underlying resolved theme surface colors are unavailable to extensions.
+Avoid transparent colors when you can — readability often suffers. Peacock draws over the workbench, which is light or dark by theme, and extensions can't read the true workbench background for contrast math. See [#293](https://github.com/johnpapa/vscode-peacock/issues/293#issuecomment-548968718).
 
-### Alpha Support
+## Logging
 
-Peacock allows for control of the alpha channel through a variety of input formats listed above. In general, it is recommended to avoid using transparent colors because it may result in poor readability. This is due to elements being affected by Peacock rendering over the VS Code workbench which will have either a light or a dark background based on the current theme. At the current time, extensions within VS Code do not have access to information about the current workbench color which will impact the readability calculations that Peacock performs to select various element colors based on the entered color. See [#293](https://github.com/johnpapa/vscode-peacock/issues/293#issuecomment-548968718) for more information.
-
-## Roadmap
-
-There are many features in the roadmap.
-
-### Issues
-
-Please refer to the [issues list and feel free to grab one and contribute](https://github.com/johnpapa/vscode-peacock/issues)!
-
-### Contributions
-
-See these pages for details on [contributions](/about/contributing) and our [code of conduct](/about/code_of_conduct).
-
-### Logging
-
-Peacock writes to VS Code's log output. You can open the output panel and select "Peacock" to see the log. This can be helpful when reporting issues.
-
-## Changes
-
-See the [CHANGELOG](/changelog) latest changes.
+Open the Output panel and select **Peacock** to view logs when reporting issues.
 
 ## FAQ
 
 ### Peacock commands are not appearing
 
-Peacock only works if a workspace is open in Visual Studio Code because it needs the settings.json file to work. When it is not in a workspace, all commands are hidden and disabled except for the "Peacock: Open Documentation" command.
+Peacock needs a workspace (and its `settings.json`). Outside a workspace, only **Peacock: Open Documentation** stays available.
 
 ### What does Peacock affect
 
-Peacock affects:
-
-- the titlebar, activitybar, and statusbar elements
-- anything regarding the readability of these elements
-- background and foreground colors
-- any elements that are displayed within these peacock elements (e.g. badges, hover)
+- Title bar, activity bar, and status bar
+- Readability of those elements
+- Background and foreground colors
+- Child UI inside those surfaces (badges, hover)
 
 ### What happens when you change the user settings
 
-When any Peacock setting is changed, Peacock should update the colors appropriately based on the most recently used color during the active VS Code instance's session.
+Peacock reapplies colors from the most recently used color in the active session.
 
-#### Example 1
+**Example 1 — color then toggle elements**
 
-User selects a color, then later changes which elements are affected.
+1. Choose "surprise me" → #ff0000
+1. Peacock stores #ff0000 as the recent color
+1. Uncheck **Peacock: Affect StatusBar**
+1. Peacock clears and reapplies #ff0000
 
-1. User chooses "surprise me" and sets the color to #ff0000
-1. Peacock saves #ff0000 in memory as the most recently used color
-1. User goes to settings and unchecks the "Peacock: Affect StatusBar"
-1. Peacock listens to this change, clears all colors and reapplies the #ff0000
+**Example 2 — workspace already colored**
 
-#### Example 2
+1. Open VS Code with workspace color #369
+1. Uncheck **Peacock: Affect StatusBar**
+1. Peacock clears and reapplies #369
 
-User opens VS Code, already has colors in their workspace, and immediately changes which elements are affected.
+**Example 3 — no color yet**
 
-1. User opens VS Code
-1. Workspace colors are set to #369
-1. User goes to settings and unchecks the "Peacock: Affect StatusBar"
-1. Peacock listens to this change, clears all colors and reapplies the #369
-
-#### Example 3
-
-User opens VS Code, has no colors in workspace, and immediately changes which elements are affected.
-
-1. User opens VS Code
-1. No workspace colors are set
-1. Peacock's most recently used color is not set
-1. User goes to settings and unchecks the "Peacock: Affect StatusBar"
-1. Peacock listens to this change, however no colors are applied
+1. Open VS Code with no Peacock color
+1. Uncheck **Peacock: Affect StatusBar**
+1. No colors are applied
 
 ### How does title bar coloring work
 
-The VS Code Title Bar style can be configured to be custom or native with the `window.titleBarStyle` setting. When operating in native mode, Peacock is unable to colorize the Title Bar because VS Code defers Title Bar management to the OS. In order to leverage the Affect Title Bar setting to colorize the Title Bar, the `window.titleBarStyle` must be set to custom.
+Set `window.titleBarStyle` to `custom`. Native mode leaves the title bar to the OS, so Peacock can't color it.
 
-On macOS there are additional settings that can impact the Title Bar style and force it into native mode regardless of the `window.titleBarStyle` setting. These include:
+On macOS also set:
 
-- `window.nativeTabs` should be set to **false**. If using native tabs, the rendering of the title bar is deferred to the OS and native mode is forced.
-- `window.nativeFullScreen` should be set to **true**. If not using native full screen mode, the custom title bar rendering presents issues in the OS and native mode is forced.
-
-A successful and recommended settings configuration to colorize the Title Bar is:
+- `window.nativeTabs`: **false** (native tabs force OS title bar)
+- `window.nativeFullScreen`: **true** (non-native full screen forces native title bar)
 
 ![Title Bar Settings](../assets/title-bar-coloring-settings.png)
 
-Cursor uses the title bar foreground color for some editor toolbar icons, including the New Agent actions. When a Peacock title bar and the active Cursor theme belong to opposite light or dark color families, Peacock adjusts only the title bar shade to match the theme while preserving the selected hue. This keeps the shared foreground readable; activity bar and status bar colors remain unchanged. VS Code retains the standard Peacock title bar behavior.
+Cursor reuses the title bar foreground for some editor toolbar icons (including New Agent). When a Peacock title bar and the active Cursor theme are opposite light/dark families, Peacock adjusts only the title bar shade to match the theme while keeping the hue. Activity bar and status bar stay unchanged. VS Code keeps standard Peacock title bar behavior.
 
-By default, `peacock.cursorThemeFamily` maps Cursor's Light and High Contrast Light theme kinds to the light family and Dark and High Contrast kinds to the dark family. Set it to `light` or `dark` when a Cursor theme reports the wrong kind; the explicit value also controls random accent lightness and optional side bar or panel variants.
+`peacock.cursorThemeFamily` defaults to mapping Light / High Contrast Light → light and Dark / High Contrast → dark. Set `light` or `dark` when a theme reports the wrong kind; that value also drives random accent lightness and optional side bar / panel variants.
 
 ### How are foreground colors calculated
 
-Peacock compares the actual tinycolor readability ratio of the configured dark and light foreground colors and chooses the stronger readable candidate. Text targets a 4.5:1 ratio and UI indicators target 3:1. User-defined foreground overrides remain the candidates, so an override with insufficient contrast cannot always meet the target.
+Peacock compares tinycolor readability of the configured dark and light foregrounds and picks the stronger candidate. Text targets 4.5:1; UI indicators target 3:1. User overrides remain the candidates, so a weak override may miss the target.
 
 ### Why is the foreground hard to see with my transparent color
 
-The readability calculations that Peacock uses to determine an appropriate foreground color are based only on the color information of the entered background color. The alpha component is currently ignored in these calculations because of complications with VS Code that make it difficult to determine the actual background color of the affected elements. See [Alpha Support](#alpha-support) for more information.
+Contrast uses the entered background color only; alpha is ignored. See [Alpha support](#alpha-support).
 
 ### Why are my affected elements not transparent
 
-Peacock allows you to enter colors that can be transparent, but the VS Code window itself is not transparent. If the entered color has some level of transparency, the resulting color of the affected elements will be based on the transparent color overlaying the default color of the VS Code workbench. In light themes the VS Code workbench color will be a very light gray and in dark themes a very dark gray.
+The VS Code window isn't transparent. A transparent input overlays the workbench (light gray on light themes, dark gray on dark themes).
 
 ### What are recommended favorites
 
-Recommended favorites are a list of constants found in `favorites.ts`. These are alphabetized.
-
-Recommended favorites are a starting point for favorites. They will be installed whenever a new version is installed. They will extend your existing favorites, so feel free to continue to add to your local favorites! However be careful not to change the color of the recommended favorites as they will be overridden when a new version is installed.
-
-This list may change from version to version depending on the Peacock authoring team.
+Alphabetized constants in `favorites.ts`. New installs extend your favorites with this list. Don't edit recommended favorite colors — upgrades override same names. The list can change between versions.
 
 ### What are mementos
 
-Peacock takes advantage of a memento (a value stored between sessions and not in settings).
+Values stored across sessions, outside settings.
 
-| Name                             | Type   | Description                                                                                                |
-| -------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------- |
-| peacockMementos.favoritesVersion | Global | The version of Peacock. Helps identify when the list of favorites should be written to the user's settings |
+| Name | Type | Description |
+| --- | --- | --- |
+| peacockMementos.favoritesVersion | Global | Peacock version used to decide when to write recommended favorites |
 
-## Try the Code
+## See also
 
-If you want to try the extension out start by cloning this repo, `cd` into the folder, and then run `npm install`.
-
-Then you can run the debugger for the launch configuration `Run Extension`. Set breakpoints, step through the code, and enjoy!
-
-## Badges
-
-[![Badge for version for Visual Studio Code extension johnpapa.vscode-peacock](https://img.shields.io/visual-studio-marketplace/v/johnpapa.vscode-peacock?color=blue&style=flat-square&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=johnpapa.vscode-peacock&wt.mc_id=vscodepeacock-github-jopapa)
-[![Installs](https://img.shields.io/visual-studio-marketplace/i/johnpapa.vscode-peacock?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=johnpapa.vscode-peacock&wt.mc_id=vscodepeacock-github-jopapa)
-[![Rating](https://img.shields.io/visual-studio-marketplace/r/johnpapa.vscode-peacock?color=blue&style=flat-square)](https://marketplace.visualstudio.com/items?itemName=johnpapa.vscode-peacock&wt.mc_id=vscodepeacock-github-jopapa)
-[![Live Share](https://img.shields.io/badge/Live_Share-enabled-8F80CF.svg?color=blue&style=flat-square&logo=visual-studio-code)](https://visualstudio.microsoft.com/services/live-share/?wt.mc_id=vscodepeacock-github-jopapa)
-
-[![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?color=blue&style=flat-square)](http://opensource.org/licenses/MIT)
-[![All Contributors](https://img.shields.io/badge/all_contributors-15-blue.svg?style=flat-square)](#contributors)
-
-[![Build Status](https://johnpapa.visualstudio.com/vscode-peacock/_apis/build/status/VS%20Code%20Peacock%20Extension?branchName=main)](https://johnpapa.visualstudio.com/vscode-peacock/_build/latest?definitionId=3&branchName=main)
-
-## Resources
-
-- [Get VS Code](https://code.visualstudio.com/?wt.mc_id=peacock-github-jopapa)
-- [Create your first VS Code extension](https://code.visualstudio.com/api/get-started/your-first-extension?wt.mc_id=peacock-github-jopapa)
-- [VS Code Extension API](https://code.visualstudio.com/api/references/vscode-api?wt.mc_id=peacock-github-jopapa)
-- [Learn how to add WebPack bundles to your favorite extensions](https://code.visualstudio.com/updates/v1_32#_bundling-extensions-with-webpack?wt.mc_id=peacock-github-jopapa)
-
-![Sketchnote](../assets/peacock-sketchnote.png)
+- [Changelog](/changelog)
+- [Contributing](/about/contributing)
+- [Code of conduct](/about/code_of_conduct)
